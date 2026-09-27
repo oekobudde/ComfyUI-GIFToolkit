@@ -7,9 +7,9 @@ This document is a compact companion to the main README. The README remains the 
 
 The field reference covers:
 
-- Webex GIF Guide / Hilfe (DE-EN)
+- GIF Toolkit Guide / Hilfe (DE-EN)
 - VHS Load Video
-- Webex GIF Preset / Prepare
+- GIF Preset / Prepare
 - Add Label
 - Get Images From Batch Indexed
 - Insert Images To Batch Indexed
