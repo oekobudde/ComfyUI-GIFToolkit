@@ -1,4 +1,4 @@
-# ComfyUI-WebexGIFTools
+# ComfyUI-GIFToolkit
 
 Create compact looping GIFs from short videos directly in ComfyUI — with presets, automatic aspect-ratio handling, optional blinking text and a bilingual on-canvas guide.
 
@@ -13,7 +13,7 @@ Create compact looping GIFs from short videos directly in ComfyUI — with prese
 
 ## Was macht das Projekt?
 
-`ComfyUI-WebexGIFTools` ergänzt ComfyUI um kleine Helper-Nodes und einen fertigen Beispielworkflow, um kurze Videos in kompakte, wiederholende GIFs umzuwandeln.
+`ComfyUI-GIFToolkit` ergänzt ComfyUI um kleine Helper-Nodes und einen fertigen Beispielworkflow, um kurze Videos in kompakte, wiederholende GIFs umzuwandeln.
 
 Der mitgelieferte Workflow übernimmt dabei:
 
@@ -28,9 +28,9 @@ Der Workflow enthält außerdem einen **Deutsch/English-Hilfe-Node**, der direkt
 
 | Node | Zweck |
 |---|---|
-| `Webex GIF Guide / Hilfe (DE-EN)` | Zweisprachige Hilfe direkt auf der ComfyUI-Arbeitsfläche |
-| `Webex GIF Preset / Prepare` | Presets, Ratio, FPS, Dauer, Resize und Blink-Zeitplan |
-| `Webex GIF Prepare / Blink Schedule` | ältere kompatible Helper-Node aus v2 |
+| `GIF Toolkit Guide / Hilfe (DE-EN)` | Zweisprachige Hilfe direkt auf der ComfyUI-Arbeitsfläche |
+| `GIF Preset / Prepare` | Presets, Ratio, FPS, Dauer, Resize und Blink-Zeitplan |
+| `GIF Prepare / Blink Schedule` | ältere kompatible Helper-Node aus v2 |
 
 Der Beispielworkflow verwendet zusätzlich Nodes aus **ComfyUI-VideoHelperSuite** und **ComfyUI-KJNodes**.
 
@@ -39,9 +39,20 @@ Der Beispielworkflow verwendet zusätzlich Nodes aus **ComfyUI-VideoHelperSuite*
 - ComfyUI
 - [ComfyUI-VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite)
 - [ComfyUI-KJNodes](https://github.com/kijai/ComfyUI-KJNodes)
-- dieses Repository: `ComfyUI-WebexGIFTools`
+- dieses Repository: `ComfyUI-GIFToolkit`
 
-Für `ComfyUI-WebexGIFTools` selbst sind aktuell **keine zusätzlichen pip-Pakete** erforderlich.
+Für `ComfyUI-GIFToolkit` selbst sind aktuell **keine zusätzlichen pip-Pakete** erforderlich.
+
+### Drittanbieter-Abhängigkeiten
+
+Der Beispielworkflow verwendet Nodes aus diesen eigenständigen Projekten:
+
+- [ComfyUI-VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) von Kosinkadink
+- [ComfyUI-KJNodes](https://github.com/kijai/ComfyUI-KJNodes) von kijai
+
+Diese Projekte werden **nicht** mit diesem Repository gebündelt. Bitte installiere sie separat aus ihren jeweiligen Original-Repositories oder über den ComfyUI Manager.
+
+Zum Zeitpunkt dieser Dokumentation deklarieren beide Upstream-Repositories **GPL-3.0**. Urheberrechte und Lizenzbedingungen dieser Projekte verbleiben bei den jeweiligen Autoren. `ComfyUI-GIFToolkit` enthält keinen kopierten Quellcode dieser Abhängigkeiten; der mitgelieferte Workflow verweist lediglich auf deren Node-Typen.
 
 ## Installation
 
@@ -51,7 +62,7 @@ Im Ordner `ComfyUI/custom_nodes`:
 
 ```bash
 cd ComfyUI/custom_nodes
-git clone https://github.com/oekobudde/ComfyUI-WebexGIFTools.git
+git clone https://github.com/oekobudde/ComfyUI-GIFToolkit.git
 ```
 
 Danach ComfyUI **vollständig neu starten**.
@@ -63,7 +74,7 @@ Danach ComfyUI **vollständig neu starten**.
 1. Repository als ZIP herunterladen.
 2. Entpacken.
 3. Den Ordner als
-   `ComfyUI/custom_nodes/ComfyUI-WebexGIFTools`
+   `ComfyUI/custom_nodes/ComfyUI-GIFToolkit`
    ablegen.
 4. ComfyUI vollständig neu starten.
 
@@ -90,7 +101,7 @@ Nach der öffentlichen Veröffentlichung in der ComfyUI Registry soll das Paket 
 Der fertige Beispielworkflow liegt unter:
 
 ```text
-workflows/ComfyUI_Webex_GIF_Maker.json
+workflows/ComfyUI_GIF_Maker.json
 ```
 
 Die vier Hauptbereiche sind:
@@ -108,7 +119,7 @@ Die vier Hauptbereiche sind:
 ## Schnellstart
 
 1. In `1 → LOAD VIDEO` ein kurzes Video auswählen.
-2. In `2 → PRESET / PREPARE` zunächst `Webex Small` oder `Webex Balanced` testen.
+2. In `2 → PRESET / PREPARE` zunächst `Small` oder `Balanced` testen.
 3. `aspect_ratio = Auto (Input Image)` lassen, wenn das Originalformat erhalten bleiben soll.
 4. Optional im `Add Label`-Node Text, Position, Schriftgröße und Farbe einstellen.
 5. Workflow starten.
@@ -118,9 +129,9 @@ Die vier Hauptbereiche sind:
 
 | Preset | Lange Seite | FPS | maximale Dauer | Empfehlung |
 |---|---:|---:|---:|---|
-| `Webex Small` | 288 px | 6 | 4.0 s | kleine Chat-Datei |
-| `Webex Balanced` | 320 px | 8 | 5.0 s | guter Standard |
-| `Webex Quality` | 384 px | 10 | 5.5 s | höhere Qualität, größere Datei |
+| `Small` | 288 px | 6 | 4.0 s | kleine Chat-Datei |
+| `Balanced` | 320 px | 8 | 5.0 s | guter Standard |
+| `Quality` | 384 px | 10 | 5.5 s | höhere Qualität, größere Datei |
 | `Custom` | frei | frei | frei | eigene Werte |
 
 > Die endgültige GIF-Größe hängt stark von Bewegung, Bildrauschen, Farbwechseln und Motivdetails ab. Ein bestimmtes MB-Limit kann deshalb nicht garantiert werden.
@@ -129,7 +140,7 @@ Die vier Hauptbereiche sind:
 
 # Feldreferenz — Deutsch
 
-## 0 · Webex GIF Guide / Hilfe (DE-EN)
+## 0 · GIF Toolkit Guide / Hilfe (DE-EN)
 
 ### `language`
 Schaltet den Hilfe-Node direkt im Workflow zwischen `Deutsch` und `English` um.
@@ -237,7 +248,7 @@ Vorschau des geladenen Videos. Sie ist nur eine UI-Vorschau und verändert die e
 
 ---
 
-## 2 · Webex GIF Preset / Prepare
+## 2 · GIF Preset / Prepare
 
 Das ist die zentrale Node dieses Projekts.
 
@@ -253,9 +264,9 @@ Sie übernimmt:
 ### `preset`
 Verfügbare Werte:
 
-- `Webex Small`
-- `Webex Balanced`
-- `Webex Quality`
+- `Small`
+- `Balanced`
+- `Quality`
 - `Custom`
 
 Bei den drei fertigen Presets werden Größe, FPS und Dauer automatisch festgelegt.
@@ -516,10 +527,10 @@ Dateiname bzw. Unterordner + Dateiname.
 Beispiel:
 
 ```text
-WebexGIF/ComfyUI_WebexGIF
+GIFToolkit/ComfyUI_GIF
 ```
 
-Dann landet das Ergebnis im Unterordner `WebexGIF` des ComfyUI-Output-Ordners.
+Dann landet das Ergebnis im Unterordner `GIFToolkit` des ComfyUI-Output-Ordners.
 
 ### `format`
 Für diesen Workflow:
@@ -599,7 +610,7 @@ Typischer Ausgangspunkt für Chat-GIFs:
 
 ### GIF ist größer als erwartet
 
-Das ist bei stark bewegten, verrauschten oder detailreichen Videos normal. `Webex Small` testen oder in `Custom` Dauer, Pixelgröße und FPS weiter reduzieren.
+Das ist bei stark bewegten, verrauschten oder detailreichen Videos normal. `Small` testen oder in `Custom` Dauer, Pixelgröße und FPS weiter reduzieren.
 
 ### Mein 16:9-/1:1-/9:16-Video wird falsch zugeschnitten
 
@@ -627,7 +638,7 @@ Prüfen, ob installiert sind:
 
 - ComfyUI-VideoHelperSuite
 - ComfyUI-KJNodes
-- ComfyUI-WebexGIFTools
+- ComfyUI-GIFToolkit
 
 Nach Installation ComfyUI vollständig neu starten.
 
@@ -636,7 +647,7 @@ Nach Installation ComfyUI vollständig neu starten.
 Prüfen, ob der Ordner
 
 ```text
-web/js/webex_gif_help.js
+web/js/gif_toolkit_help.js
 ```
 
 im installierten Repository vorhanden ist und ComfyUI nach der Installation vollständig neu gestartet wurde.
@@ -647,7 +658,7 @@ im installierten Repository vorhanden ist und ComfyUI nach der Installation voll
 
 ## What does this project do?
 
-`ComfyUI-WebexGIFTools` adds small helper nodes and a ready-to-use example workflow for converting short videos into compact looping GIFs directly in ComfyUI.
+`ComfyUI-GIFToolkit` adds small helper nodes and a ready-to-use example workflow for converting short videos into compact looping GIFs directly in ComfyUI.
 
 The included workflow handles:
 
@@ -662,9 +673,9 @@ The workflow also contains a **Deutsch/English help node** directly on the Comfy
 
 | Node | Purpose |
 |---|---|
-| `Webex GIF Guide / Hilfe (DE-EN)` | bilingual help directly on the ComfyUI canvas |
-| `Webex GIF Preset / Prepare` | presets, aspect ratio, FPS, duration, resize and blink schedule |
-| `Webex GIF Prepare / Blink Schedule` | backward-compatible helper from v2 |
+| `GIF Toolkit Guide / Hilfe (DE-EN)` | bilingual help directly on the ComfyUI canvas |
+| `GIF Preset / Prepare` | presets, aspect ratio, FPS, duration, resize and blink schedule |
+| `GIF Prepare / Blink Schedule` | backward-compatible helper from v2 |
 
 The example workflow also uses nodes from **ComfyUI-VideoHelperSuite** and **ComfyUI-KJNodes**.
 
@@ -673,9 +684,20 @@ The example workflow also uses nodes from **ComfyUI-VideoHelperSuite** and **Com
 - ComfyUI
 - [ComfyUI-VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite)
 - [ComfyUI-KJNodes](https://github.com/kijai/ComfyUI-KJNodes)
-- this repository: `ComfyUI-WebexGIFTools`
+- this repository: `ComfyUI-GIFToolkit`
 
-`ComfyUI-WebexGIFTools` currently has **no additional pip dependencies**.
+`ComfyUI-GIFToolkit` currently has **no additional pip dependencies**.
+
+### Third-party dependencies
+
+The example workflow uses nodes from these independent projects:
+
+- [ComfyUI-VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) by Kosinkadink
+- [ComfyUI-KJNodes](https://github.com/kijai/ComfyUI-KJNodes) by kijai
+
+These projects are **not bundled** with this repository. Install them separately from their respective upstream repositories or through ComfyUI Manager.
+
+At the time of this documentation, both upstream repositories declare **GPL-3.0**. Their copyrights and license terms remain with their respective authors. `ComfyUI-GIFToolkit` does not copy their source code; the included workflow only references their node types.
 
 ## Installation
 
@@ -685,7 +707,7 @@ From `ComfyUI/custom_nodes`:
 
 ```bash
 cd ComfyUI/custom_nodes
-git clone https://github.com/oekobudde/ComfyUI-WebexGIFTools.git
+git clone https://github.com/oekobudde/ComfyUI-GIFToolkit.git
 ```
 
 Then **fully restart ComfyUI**.
@@ -697,7 +719,7 @@ Then **fully restart ComfyUI**.
 1. Download the repository as a ZIP.
 2. Extract it.
 3. Place the folder at
-   `ComfyUI/custom_nodes/ComfyUI-WebexGIFTools`.
+   `ComfyUI/custom_nodes/ComfyUI-GIFToolkit`.
 4. Fully restart ComfyUI.
 
 ### Installing dependencies
@@ -723,7 +745,7 @@ After the project is publicly published to the ComfyUI Registry, it is intended 
 The ready-to-use workflow is located at:
 
 ```text
-workflows/ComfyUI_Webex_GIF_Maker.json
+workflows/ComfyUI_GIF_Maker.json
 ```
 
 Main workflow sections:
@@ -741,7 +763,7 @@ Main workflow sections:
 ## Quick start
 
 1. Select a short video in `1 → LOAD VIDEO`.
-2. Start with `Webex Small` or `Webex Balanced` in `2 → PRESET / PREPARE`.
+2. Start with `Small` or `Balanced` in `2 → PRESET / PREPARE`.
 3. Keep `aspect_ratio = Auto (Input Image)` to preserve the source aspect ratio.
 4. Optionally configure text, position, font size and color in `Add Label`.
 5. Queue the workflow.
@@ -751,9 +773,9 @@ Main workflow sections:
 
 | Preset | Long side | FPS | maximum duration | Recommended use |
 |---|---:|---:|---:|---|
-| `Webex Small` | 288 px | 6 | 4.0 s | small chat GIF |
-| `Webex Balanced` | 320 px | 8 | 5.0 s | good default |
-| `Webex Quality` | 384 px | 10 | 5.5 s | higher quality, larger file |
+| `Small` | 288 px | 6 | 4.0 s | small chat GIF |
+| `Balanced` | 320 px | 8 | 5.0 s | good default |
+| `Quality` | 384 px | 10 | 5.5 s | higher quality, larger file |
 | `Custom` | custom | custom | custom | manual control |
 
 > Final GIF size depends strongly on motion, image noise, color changes and scene detail. A specific MB target therefore cannot be guaranteed.
@@ -762,7 +784,7 @@ Main workflow sections:
 
 # Field reference — English
 
-## 0 · Webex GIF Guide / Hilfe (DE-EN)
+## 0 · GIF Toolkit Guide / Hilfe (DE-EN)
 
 ### `language`
 Switches the on-canvas help node between `Deutsch` and `English`.
@@ -870,7 +892,7 @@ UI preview of the selected input video. It does not itself modify the output fra
 
 ---
 
-## 2 · Webex GIF Preset / Prepare
+## 2 · GIF Preset / Prepare
 
 This is the central node of this project.
 
@@ -886,9 +908,9 @@ It handles:
 ### `preset`
 Available values:
 
-- `Webex Small`
-- `Webex Balanced`
-- `Webex Quality`
+- `Small`
+- `Balanced`
+- `Quality`
 - `Custom`
 
 The three built-in presets automatically define size, FPS and duration.
