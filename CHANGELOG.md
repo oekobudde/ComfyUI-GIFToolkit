@@ -2,6 +2,10 @@
 
 ## 0.3.0-dev.1
 - Added `GIF Text Designer`, an inline visual canvas for positioning text by dragging it directly on the preview frame.
+- Added dynamic designer auto-sizing so Advanced Style expands/collapses without leaving large empty space.
+- Added a single `Enable text overlay` master switch; when disabled, frames pass through unchanged and the text controls are visually disabled.
+- Empty designer state now shows only the preview prompt until a real frame has been loaded.
+- Adopted the user-tested workflow layout while stripping local media paths and preview references from the public JSON.
 - Text/style controls are presented graphically while the underlying workflow values remain serializable.
 - Added quick 3×3 placement shortcuts plus live font size, text color, background, outline and shadow controls.
 - Added `GIF Export Gate` with preview-first behavior.
