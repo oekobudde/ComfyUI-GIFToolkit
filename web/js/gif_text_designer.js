@@ -21,6 +21,19 @@ function hideWidget(w) {
   if (w.inputEl) w.inputEl.style.display = "none";
 }
 
+function fitNodeToContent(node, root, extra = 64) {
+  requestAnimationFrame(() => {
+    if (!node || !root) return;
+    const width = Math.max(580, Number(node.size?.[0] || 580));
+    const needed = Math.max(300, Math.ceil(root.scrollHeight + extra));
+    const current = Number(node.size?.[1] || 0);
+    if (Math.abs(current - needed) < 6) return;
+    node.setSize?.([width, needed]);
+    node.setDirtyCanvas?.(true, true);
+    app.graph?.setDirtyCanvas?.(true, true);
+  });
+}
+
 function viewUrl(entry) {
   const params = new URLSearchParams({
     filename: entry.filename,
@@ -61,13 +74,19 @@ function designerUI(node) {
   root.appendChild(top);
 
   const enabled = document.createElement("label");
-  enabled.innerHTML = '<input type="checkbox"> Text enabled';
+  enabled.style.cssText = "font-weight:700;display:flex;gap:5px;align-items:center";
+  enabled.innerHTML = '<input type="checkbox"> Enable text overlay';
   enabled.querySelector("input").checked = !!widget(node,"enabled")?.value;
   enabled.querySelector("input").onchange = e => {
     setWidget(node,"enabled",e.target.checked);
+    updateEnabledUI();
     draw();
   };
   top.appendChild(enabled);
+
+  const masterState = document.createElement("span");
+  masterState.style.cssText = "font-size:11px;opacity:.78;margin-left:auto";
+  top.appendChild(masterState);
 
   const frameWrap = document.createElement("label");
   frameWrap.textContent = "Preview frame ";
@@ -108,17 +127,21 @@ function designerUI(node) {
   hint.style.cssText = "opacity:.72;text-align:center;font-size:11px";
   root.appendChild(hint);
 
+  const controlsWrap = document.createElement("div");
+  controlsWrap.style.cssText = "display:flex;flex-direction:column;gap:8px;width:100%;box-sizing:border-box";
+  root.appendChild(controlsWrap);
+
   const textarea = document.createElement("textarea");
   textarea.value = widget(node,"text")?.value ?? "";
   textarea.rows = 2;
   textarea.placeholder = "Text";
   textarea.style.cssText = "width:100%;box-sizing:border-box;background:#221d15;color:#fff;border:1px solid #5d4a25;border-radius:5px;padding:6px";
   textarea.oninput = () => { setWidget(node,"text",textarea.value); draw(); };
-  root.appendChild(textarea);
+  controlsWrap.appendChild(textarea);
 
   const row1 = document.createElement("div");
   row1.style.cssText = "display:grid;grid-template-columns:1.5fr .7fr .8fr;gap:6px";
-  root.appendChild(row1);
+  controlsWrap.appendChild(row1);
 
   const fontSel = document.createElement("select");
   const fontW = widget(node,"font");
@@ -155,11 +178,11 @@ function designerUI(node) {
     b.onclick=()=>{setWidget(node,"x_percent",x);setWidget(node,"y_percent",y);draw();};
     quick.appendChild(b);
   }
-  root.appendChild(quick);
+  controlsWrap.appendChild(quick);
 
   const styleRow = document.createElement("div");
   styleRow.style.cssText = "display:grid;grid-template-columns:repeat(3,1fr);gap:6px";
-  root.appendChild(styleRow);
+  controlsWrap.appendChild(styleRow);
 
   function checkControl(label,name,colorName){
     const box=document.createElement("div");
@@ -182,11 +205,9 @@ function designerUI(node) {
   const advanced = document.createElement("details");
   advanced.innerHTML = "<summary>Advanced style</summary>";
   advanced.style.cssText="background:#211b12;border:1px solid #5d4a25;border-radius:5px;padding:6px;box-sizing:border-box;width:100%";
-  root.appendChild(advanced);
+  controlsWrap.appendChild(advanced);
   advanced.addEventListener("toggle", () => {
-    const targetH = advanced.open ? 1080 : 900;
-    node.setSize?.([580, targetH]);
-    node.setDirtyCanvas?.(true, true);
+    fitNodeToContent(node, root);
   });
 
   const grid=document.createElement("div");
@@ -269,6 +290,8 @@ function designerUI(node) {
       imageRect={x:0,y:0,w:canvas.width,h:canvas.height};
       ctx.fillStyle="#777"; ctx.textAlign="center"; ctx.font="14px sans-serif";
       ctx.fillText("Run once to load a preview frame",canvas.width/2,canvas.height/2);
+      textRect=null;
+      return;
     }
 
     const st=currentStyle();
@@ -321,12 +344,24 @@ function designerUI(node) {
     ctx.restore();
   }
 
+  function updateEnabledUI() {
+    const on = !!widget(node,"enabled")?.value;
+    controlsWrap.style.opacity = on ? "1" : "0.38";
+    controlsWrap.style.filter = on ? "none" : "grayscale(.35)";
+    controlsWrap.style.pointerEvents = on ? "auto" : "none";
+    masterState.textContent = on ? "TEXT ON" : "TEXT OFF · frames pass through unchanged";
+    masterState.style.color = on ? "#bfffd0" : "#ffcf8a";
+    canvas.style.cursor = on ? "grab" : "default";
+    fitNodeToContent(node, root);
+  }
+
   function point(e){
     const r=canvas.getBoundingClientRect();
     return {x:(e.clientX-r.left)*(canvas.width/r.width), y:(e.clientY-r.top)*(canvas.height/r.height)};
   }
 
   canvas.addEventListener("pointerdown",e=>{
+    if (!widget(node,"enabled")?.value) return;
     const p=point(e);
     if(textRect && p.x>=textRect.x-8 && p.x<=textRect.x+textRect.w+8 && p.y>=textRect.y-8 && p.y<=textRect.y+textRect.h+8){
       dragging=true; canvas.setPointerCapture(e.pointerId); canvas.style.cursor="grabbing"; e.preventDefault();
@@ -351,17 +386,21 @@ function designerUI(node) {
       bg=img;
       resizeCanvasForImage();
       draw();
-      requestAnimationFrame(() => {
-        const needed = Math.max(880, Math.ceil(root.scrollHeight + 120));
-        node.setSize?.([580, needed]);
-        node.setDirtyCanvas?.(true, true);
-      });
+      fitNodeToContent(node, root);
     };
     img.onerror=()=>{bg=null;draw();};
     img.src=viewUrl(entry);
   };
   node._gifDesignerDraw=draw;
+  updateEnabledUI();
   draw();
+
+  if (typeof ResizeObserver !== "undefined") {
+    const ro = new ResizeObserver(() => fitNodeToContent(node, root));
+    ro.observe(root);
+    node._gifDesignerResizeObserver = ro;
+  }
+  fitNodeToContent(node, root);
   return root;
 }
 
@@ -423,7 +462,8 @@ app.registerExtension({
         for(const n of names) hideWidget(widget(this,n));
         const ui=designerUI(this);
         this.addDOMWidget("designer","gif_text_designer",ui,{serialize:false,hideOnZoom:false});
-        this.setSize([580,900]);
+        this.setSize([580,720]);
+        fitNodeToContent(this, ui);
         return r;
       };
       const oldExec=nodeType.prototype.onExecuted;
