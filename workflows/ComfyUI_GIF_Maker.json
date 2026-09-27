@@ -1,8 +1,8 @@
 {
   "id": "49f40cea-6207-4f36-98da-16ecb6b93058",
   "revision": 1,
-  "last_node_id": 12,
-  "last_link_id": 10,
+  "last_node_id": 14,
+  "last_link_id": 11,
   "nodes": [
     {
       "id": 1,
@@ -13,7 +13,7 @@
       ],
       "size": [
         510,
-        760
+        820
       ],
       "flags": {},
       "order": 0,
@@ -151,15 +151,16 @@
           "type": "IMAGE",
           "links": [
             3,
-            6
+            4
           ]
         },
         {
           "name": "fps",
           "type": "FLOAT",
           "links": [
-            7,
-            10
+            5,
+            8,
+            11
           ]
         },
         {
@@ -211,104 +212,87 @@
     },
     {
       "id": 9,
-      "type": "GIFToolkitTextStyle",
+      "type": "GIFToolkitTextDesigner",
       "pos": [
-        770,
+        760,
         20
       ],
       "size": [
-        390,
-        720
+        560,
+        760
       ],
       "flags": {},
       "order": 3,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "style",
-          "type": "GIF_TEXT_STYLE",
-          "links": [
-            4,
-            8
-          ]
-        }
-      ],
-      "title": "3A → TEXT STYLE · position without raw X/Y",
-      "properties": {
-        "Node name for S&R": "GIFToolkitTextStyle"
-      },
-      "widgets_values": [
-        true,
-        "LET'S GO!",
-        "PIL Default",
-        34,
-        "yellow",
-        "Top Center",
-        16,
-        16,
-        50,
-        15,
-        false,
-        "black",
-        160,
-        8,
-        8,
-        true,
-        "black",
-        2,
-        false,
-        "black",
-        2,
-        2,
-        4
-      ],
-      "color": "#61491f",
-      "bgcolor": "#3d2f16"
-    },
-    {
-      "id": 10,
-      "type": "GIFToolkitTextPreview",
-      "pos": [
-        1210,
-        20
-      ],
-      "size": [
-        330,
-        180
-      ],
-      "flags": {},
-      "order": 4,
       "mode": 0,
       "inputs": [
         {
           "name": "images",
           "type": "IMAGE",
           "link": 3
-        },
-        {
-          "name": "style",
-          "type": "GIF_TEXT_STYLE",
-          "link": 4
         }
       ],
       "outputs": [
         {
+          "name": "style",
+          "type": "GIF_TEXT_STYLE",
+          "links": [
+            6
+          ]
+        },
+        {
           "name": "preview",
           "type": "IMAGE",
-          "links": [
-            5
-          ]
+          "links": null
         }
       ],
-      "title": "3B → TEXT PREVIEW · one frame",
+      "title": "3A → VISUAL TEXT DESIGNER · drag text on image",
       "properties": {
-        "Node name for S&R": "GIFToolkitTextPreview"
+        "Node name for S&R": "GIFToolkitTextDesigner"
       },
       "widgets_values": [
+        true,
+        "LET'S GO!",
+        "PIL Default",
+        34,
+        "#ffff00",
+        50,
+        15,
+        false,
+        "#000000",
+        160,
+        8,
+        8,
+        true,
+        "#000000",
+        2,
+        false,
+        "#000000",
+        2,
+        2,
+        4,
         0
       ],
       "widgets_values_named": {
+        "enabled": true,
+        "text": "LET'S GO!",
+        "font": "PIL Default",
+        "font_size": 34,
+        "font_color": "#ffff00",
+        "x_percent": 50,
+        "y_percent": 15,
+        "background_enabled": false,
+        "background_color": "#000000",
+        "background_opacity": 160,
+        "padding": 8,
+        "corner_radius": 8,
+        "outline_enabled": true,
+        "outline_color": "#000000",
+        "outline_width": 2,
+        "shadow_enabled": false,
+        "shadow_color": "#000000",
+        "shadow_offset_x": 2,
+        "shadow_offset_y": 2,
+        "line_spacing": 4,
         "preview_frame": 0
       },
       "color": "#61491f",
@@ -318,7 +302,7 @@
       "id": 12,
       "type": "GIFToolkitTextOverlay",
       "pos": [
-        1590,
+        1360,
         20
       ],
       "size": [
@@ -326,13 +310,13 @@
         300
       ],
       "flags": {},
-      "order": 5,
+      "order": 4,
       "mode": 0,
       "inputs": [
         {
           "name": "images",
           "type": "IMAGE",
-          "link": 6
+          "link": 4
         },
         {
           "name": "fps",
@@ -340,12 +324,12 @@
           "widget": {
             "name": "fps"
           },
-          "link": 7
+          "link": 5
         },
         {
           "name": "style",
           "type": "GIF_TEXT_STYLE",
-          "link": 8
+          "link": 6
         }
       ],
       "outputs": [
@@ -353,11 +337,12 @@
           "name": "images",
           "type": "IMAGE",
           "links": [
+            7,
             9
           ]
         }
       ],
-      "title": "3C → APPLY TEXT / BLINK",
+      "title": "3B → APPLY TEXT / BLINK",
       "properties": {
         "Node name for S&R": "GIFToolkitTextOverlay"
       },
@@ -377,38 +362,10 @@
       "bgcolor": "#3d2f16"
     },
     {
-      "id": 11,
-      "type": "PreviewImage",
-      "pos": [
-        1210,
-        250
-      ],
-      "size": [
-        330,
-        360
-      ],
-      "flags": {},
-      "order": 6,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 5
-        }
-      ],
-      "outputs": [],
-      "title": "PREVIEW · adjust style before final GIF",
-      "properties": {
-        "Node name for S&R": "PreviewImage"
-      },
-      "widgets_values": []
-    },
-    {
-      "id": 8,
+      "id": 13,
       "type": "VHS_VideoCombine",
       "pos": [
-        2020,
+        1760,
         20
       ],
       "size": [
@@ -416,13 +373,13 @@
         440
       ],
       "flags": {},
-      "order": 7,
+      "order": 5,
       "mode": 0,
       "inputs": [
         {
           "name": "images",
           "type": "IMAGE",
-          "link": 9
+          "link": 7
         },
         {
           "name": "audio",
@@ -448,7 +405,7 @@
           "widget": {
             "name": "frame_rate"
           },
-          "link": 10
+          "link": 8
         }
       ],
       "outputs": [
@@ -458,7 +415,130 @@
           "links": null
         }
       ],
-      "title": "4 → SAVE LOOPING GIF",
+      "title": "4A → PREVIEW GIF · TEMP ONLY",
+      "properties": {
+        "cnr_id": "comfyui-videohelpersuite",
+        "ver": "1.7.9",
+        "Node name for S&R": "VHS_VideoCombine",
+        "aux_id": "Kosinkadink/ComfyUI-VideoHelperSuite"
+      },
+      "widgets_values": {
+        "frame_rate": 8,
+        "loop_count": 0,
+        "filename_prefix": "GIFToolkit/Preview",
+        "format": "image/gif",
+        "pingpong": false,
+        "save_output": false
+      },
+      "color": "#3b3a63",
+      "bgcolor": "#272747",
+      "widgets_values_named": {
+        "frame_rate": 8,
+        "loop_count": 0,
+        "filename_prefix": "GIFToolkit/Preview",
+        "format": "image/gif",
+        "pingpong": false,
+        "save_output": false
+      }
+    },
+    {
+      "id": 14,
+      "type": "GIFToolkitExportGate",
+      "pos": [
+        1760,
+        520
+      ],
+      "size": [
+        330,
+        160
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 9
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            10
+          ]
+        }
+      ],
+      "title": "4B → EXPORT GATE · preview by default",
+      "properties": {
+        "Node name for S&R": "GIFToolkitExportGate"
+      },
+      "widgets_values": [
+        false
+      ],
+      "widgets_values_named": {
+        "export_enabled": false
+      },
+      "color": "#244b2b",
+      "bgcolor": "#18351f"
+    },
+    {
+      "id": 8,
+      "type": "VHS_VideoCombine",
+      "pos": [
+        2140,
+        300
+      ],
+      "size": [
+        350,
+        440
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 10
+        },
+        {
+          "name": "audio",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "meta_batch",
+          "shape": 7,
+          "type": "VHS_BatchManager",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "shape": 7,
+          "type": "VAE",
+          "link": null
+        },
+        {
+          "name": "frame_rate",
+          "type": "FLOAT",
+          "widget": {
+            "name": "frame_rate"
+          },
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Filenames",
+          "type": "VHS_FILENAMES",
+          "links": null
+        }
+      ],
+      "title": "4C → SAVE FINAL GIF · only after approval",
       "properties": {
         "cnr_id": "comfyui-videohelpersuite",
         "ver": "1.7.9",
@@ -506,28 +586,12 @@
       3,
       3,
       0,
-      10,
+      9,
       0,
       "IMAGE"
     ],
     [
       4,
-      9,
-      0,
-      10,
-      1,
-      "GIF_TEXT_STYLE"
-    ],
-    [
-      5,
-      10,
-      0,
-      11,
-      0,
-      "IMAGE"
-    ],
-    [
-      6,
       3,
       0,
       12,
@@ -535,7 +599,7 @@
       "IMAGE"
     ],
     [
-      7,
+      5,
       3,
       1,
       12,
@@ -543,7 +607,7 @@
       "FLOAT"
     ],
     [
-      8,
+      6,
       9,
       0,
       12,
@@ -551,15 +615,39 @@
       "GIF_TEXT_STYLE"
     ],
     [
+      7,
+      12,
+      0,
+      13,
+      0,
+      "IMAGE"
+    ],
+    [
+      8,
+      3,
+      1,
+      13,
+      4,
+      "FLOAT"
+    ],
+    [
       9,
       12,
+      0,
+      14,
+      0,
+      "IMAGE"
+    ],
+    [
+      10,
+      14,
       0,
       8,
       0,
       "IMAGE"
     ],
     [
-      10,
+      11,
       3,
       1,
       8,
@@ -596,12 +684,12 @@
     },
     {
       "id": 3,
-      "title": "3 → TEXT + PREVIEW + BLINK",
+      "title": "3 → VISUAL TEXT DESIGNER + BLINK",
       "bounding": [
-        730,
+        720,
         -20,
-        1230,
-        790
+        1030,
+        820
       ],
       "color": "#8a6335",
       "font_size": 24,
@@ -609,12 +697,12 @@
     },
     {
       "id": 4,
-      "title": "4 → OUTPUT",
+      "title": "4 → PREVIEW → APPROVE → EXPORT",
       "bounding": [
-        1980,
+        1720,
         -20,
-        430,
-        520
+        820,
+        800
       ],
       "color": "#3f7848",
       "font_size": 24,
@@ -630,15 +718,14 @@
     "VHS_MetadataImage": true,
     "VHS_KeepIntermediate": true,
     "ds": {
-      "scale": 0.66,
+      "scale": 0.58,
       "offset": [
-        760,
-        430
+        830,
+        450
       ]
     },
     "node_versions": {
       "comfy-core": "0.36.0",
-      "comfyui-kjnodes": "3f20054214fec9f9234fd3841ae6f1e4287948f6",
       "comfyui-videohelpersuite": "1.7.9",
       "plaguekind-nodes": "41f463800fc41a045f511f76256c484e5154b2d6"
     }
