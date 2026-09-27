@@ -3,7 +3,7 @@
 This repository can stay private while the workflow and nodes are tested.
 
 ## 1. GitHub
-1. Repository: `https://github.com/oekobudde/ComfyUI-WebexGIFTools`
+1. Repository: `https://github.com/oekobudde/ComfyUI-GIFToolkit`
 2. Keep it **private** during testing.
 3. Use `main` as the default branch.
 4. Before making it public, choose and add a license. MIT is a common permissive option, but the license choice should be explicit.
