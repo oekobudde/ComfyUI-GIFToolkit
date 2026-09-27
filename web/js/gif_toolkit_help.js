@@ -2,15 +2,13 @@ import { app } from "../../scripts/app.js";
 
 const HELP = {
   Deutsch: `
-    <div class="wg-title">GIF Maker · v0.2 Preview</div>
-    <div class="wg-sub">KJNodes-freier Workflow · Textposition jetzt über verständliche Anker</div>
+    <div class="wg-title">GIF Maker · Visual Designer Preview</div>
+    <div class="wg-sub">Vorschau zuerst · permanentes GIF erst nach Freigabe</div>
 
     <section><div class="wg-head"><span>1</span> → LOAD VIDEO</div>
       <div><b>Node:</b> VHS Load Video (Upload)</div>
-      <div>• force_rate: <b>12 FPS</b></div>
-      <div>• custom_width / custom_height: <b>0 / 0</b> = Originalformat</div>
-      <div>• frame_load_cap: <b>144</b> → max. ca. 12 s bei 12 FPS</div>
-      <div class="wg-tip">Bei sehr großen 2K/4K-Quellen kannst du optional custom_width auf z. B. 512 setzen.</div>
+      <div>Video auswählen. Standard: 12 FPS, max. 144 geladene Frames.</div>
+      <div class="wg-tip">Normales Run speichert ab jetzt kein finales GIF mehr.</div>
     </section>
 
     <div class="wg-arrow">↓</div>
@@ -19,58 +17,53 @@ const HELP = {
       <div>• Small: 288 px · 6 FPS · 4.0 s</div>
       <div>• Balanced: 320 px · 8 FPS · 5.0 s</div>
       <div>• Quality: 384 px · 10 FPS · 5.5 s</div>
-      <div>• Custom: Größe / FPS / Dauer frei</div>
-      <div>• Auto behält das Seitenverhältnis des Videos bei.</div>
-      <div>• Festes Ratio = mittiger Crop.</div>
+      <div>• Auto erhält das Seitenverhältnis.</div>
     </section>
 
     <div class="wg-arrow">↓</div>
-    <section><div class="wg-head"><span>3A</span> → TEXT STYLE</div>
-      <div><b>Node:</b> GIF Text Style</div>
-      <div>• Text, Font, Größe und Farbe einmal einstellen.</div>
-      <div>• Position z. B. <b>Top Center</b>, <b>Bottom Right</b> oder <b>Center</b>.</div>
-      <div>• margin_x / margin_y steuern nur den Abstand zum gewählten Rand.</div>
-      <div>• Optional: Hintergrundbox, Outline und Shadow.</div>
-      <div class="wg-tip"><b>Kein Text?</b> enabled = false. Der Workflow muss nicht umverkabelt werden.</div>
+    <section><div class="wg-head"><span>3A</span> → VISUAL TEXT DESIGNER</div>
+      <div><b>Node:</b> GIF Text Designer</div>
+      <div>• Einmal Run drücken, damit ein Preview-Frame geladen wird.</div>
+      <div>• Text direkt im Bild mit der Maus verschieben.</div>
+      <div>• Text, Font, Größe und Farben grafisch einstellen.</div>
+      <div>• Pfeilraster = schnelle Positionierung.</div>
+      <div>• Background, Outline und Shadow direkt ein-/ausschalten.</div>
+      <div>• enabled aus = kein Text.</div>
+      <div class="wg-tip">Nach dem ersten Run kannst du Position und Style lokal im Browser ändern, ohne jedes Mal neu zu rendern.</div>
     </section>
 
     <div class="wg-arrow">↓</div>
-    <section><div class="wg-head"><span>3B</span> → PREVIEW</div>
-      <div><b>Nodes:</b> GIF Text Preview + Preview Image</div>
-      <div>• preview_frame wählt nur einen einzelnen Frame.</div>
-      <div>• Damit Position und Style schnell prüfen, ohne erst das komplette GIF beurteilen zu müssen.</div>
-      <div class="wg-tip">Style ändern → erneut ausführen → Preview prüfen.</div>
-    </section>
-
-    <div class="wg-arrow">↓</div>
-    <section><div class="wg-head"><span>3C</span> → TEXT / BLINK</div>
+    <section><div class="wg-head"><span>3B</span> → TEXT / BLINK</div>
       <div><b>Node:</b> GIF Text Overlay</div>
       <div>• blink_enabled aus = Text dauerhaft sichtbar.</div>
       <div>• blink_on_seconds / blink_off_seconds = Blinkrhythmus.</div>
-      <div>• Die Node bearbeitet den kompletten Frame-Batch direkt.</div>
     </section>
 
     <div class="wg-arrow">↓</div>
-    <section><div class="wg-head"><span>4</span> → SAVE GIF</div>
-      <div><b>Node:</b> VHS Video Combine</div>
-      <div>• format: <b>image/gif</b></div>
-      <div>• loop_count: <b>0</b> = Endlosschleife</div>
-      <div>• FPS wird automatisch von Prepare übernommen.</div>
-      <div class="wg-warn">Die Dateigröße hängt stark von Bewegung, Rauschen und Farben ab. Ein fixes MB-Limit kann nicht garantiert werden.</div>
+    <section><div class="wg-head"><span>4A</span> → GIF PREVIEW</div>
+      <div><b>Node:</b> VHS Video Combine · TEMP ONLY</div>
+      <div>Bei normalem Run entsteht nur ein temporäres Preview-GIF.</div>
+      <div>Es landet nicht dauerhaft im Output-Ordner.</div>
+    </section>
+
+    <div class="wg-arrow">↓</div>
+    <section><div class="wg-head"><span>4B</span> → APPROVE / EXPORT</div>
+      <div><b>Node:</b> GIF Export Gate</div>
+      <div>Standard: <b>PREVIEW MODE</b> — finaler Saver ist blockiert.</div>
+      <div>Wenn alles passt: <b>EXPORT GIF NOW</b> drücken.</div>
+      <div>Der Button startet genau einen Export-Lauf und schaltet danach zurück auf Preview.</div>
     </section>
 
     <div class="wg-foot">Benötigt: ComfyUI · VideoHelperSuite · ComfyUI-GIFToolkit</div>`,
 
   English: `
-    <div class="wg-title">GIF Maker · v0.2 Preview</div>
-    <div class="wg-sub">KJNodes-free workflow · human-friendly text positioning</div>
+    <div class="wg-title">GIF Maker · Visual Designer Preview</div>
+    <div class="wg-sub">Preview first · permanent GIF only after approval</div>
 
     <section><div class="wg-head"><span>1</span> → LOAD VIDEO</div>
       <div><b>Node:</b> VHS Load Video (Upload)</div>
-      <div>• force_rate: <b>12 FPS</b></div>
-      <div>• custom_width / custom_height: <b>0 / 0</b> = preserve source size</div>
-      <div>• frame_load_cap: <b>144</b> → about 12 s at 12 FPS</div>
-      <div class="wg-tip">For very large 2K/4K sources, optionally set custom_width to e.g. 512.</div>
+      <div>Select a video. Default: 12 FPS, max. 144 loaded frames.</div>
+      <div class="wg-tip">A normal Run no longer writes a final GIF.</div>
     </section>
 
     <div class="wg-arrow">↓</div>
@@ -79,44 +72,41 @@ const HELP = {
       <div>• Small: 288 px · 6 FPS · 4.0 s</div>
       <div>• Balanced: 320 px · 8 FPS · 5.0 s</div>
       <div>• Quality: 384 px · 10 FPS · 5.5 s</div>
-      <div>• Custom: free size / FPS / duration controls</div>
       <div>• Auto preserves the source aspect ratio.</div>
-      <div>• A forced ratio performs a centered crop.</div>
     </section>
 
     <div class="wg-arrow">↓</div>
-    <section><div class="wg-head"><span>3A</span> → TEXT STYLE</div>
-      <div><b>Node:</b> GIF Text Style</div>
-      <div>• Configure text, font, size and color once.</div>
-      <div>• Position using anchors such as <b>Top Center</b>, <b>Bottom Right</b> or <b>Center</b>.</div>
-      <div>• margin_x / margin_y only control distance from the selected edge.</div>
-      <div>• Optional background box, outline and shadow.</div>
-      <div class="wg-tip"><b>No text?</b> Set enabled = false. No rewiring required.</div>
+    <section><div class="wg-head"><span>3A</span> → VISUAL TEXT DESIGNER</div>
+      <div><b>Node:</b> GIF Text Designer</div>
+      <div>• Run once to load a preview frame.</div>
+      <div>• Drag the text directly on the image.</div>
+      <div>• Edit text, font, size and colors graphically.</div>
+      <div>• Arrow grid = fast positioning shortcuts.</div>
+      <div>• Toggle background, outline and shadow directly.</div>
+      <div>• Disable enabled for no text.</div>
+      <div class="wg-tip">After the first Run, position and style changes are local in the browser and do not require repeated rendering.</div>
     </section>
 
     <div class="wg-arrow">↓</div>
-    <section><div class="wg-head"><span>3B</span> → PREVIEW</div>
-      <div><b>Nodes:</b> GIF Text Preview + Preview Image</div>
-      <div>• preview_frame selects a single frame.</div>
-      <div>• Quickly check position and styling before judging the final GIF.</div>
-      <div class="wg-tip">Change style → run again → inspect preview.</div>
-    </section>
-
-    <div class="wg-arrow">↓</div>
-    <section><div class="wg-head"><span>3C</span> → TEXT / BLINK</div>
+    <section><div class="wg-head"><span>3B</span> → TEXT / BLINK</div>
       <div><b>Node:</b> GIF Text Overlay</div>
       <div>• blink_enabled off = text stays visible.</div>
       <div>• blink_on_seconds / blink_off_seconds = blink rhythm.</div>
-      <div>• The node processes the complete frame batch directly.</div>
     </section>
 
     <div class="wg-arrow">↓</div>
-    <section><div class="wg-head"><span>4</span> → SAVE GIF</div>
-      <div><b>Node:</b> VHS Video Combine</div>
-      <div>• format: <b>image/gif</b></div>
-      <div>• loop_count: <b>0</b> = endless loop</div>
-      <div>• FPS is supplied automatically by Prepare.</div>
-      <div class="wg-warn">File size depends strongly on motion, noise and colors. A fixed MB target cannot be guaranteed.</div>
+    <section><div class="wg-head"><span>4A</span> → GIF PREVIEW</div>
+      <div><b>Node:</b> VHS Video Combine · TEMP ONLY</div>
+      <div>A normal Run creates only a temporary preview GIF.</div>
+      <div>It is not permanently written to the output folder.</div>
+    </section>
+
+    <div class="wg-arrow">↓</div>
+    <section><div class="wg-head"><span>4B</span> → APPROVE / EXPORT</div>
+      <div><b>Node:</b> GIF Export Gate</div>
+      <div>Default: <b>PREVIEW MODE</b> — final saver is blocked.</div>
+      <div>When satisfied, click <b>EXPORT GIF NOW</b>.</div>
+      <div>The button starts one export run, then returns to preview mode.</div>
     </section>
 
     <div class="wg-foot">Requires: ComfyUI · VideoHelperSuite · ComfyUI-GIFToolkit</div>`
@@ -144,7 +134,6 @@ const css = `
   section{border:1px solid #2a3340;border-radius:7px;padding:9px 10px;background:#11161c}
   .wg-arrow{text-align:center;font-size:20px;line-height:24px;color:#79c7ff;font-weight:900}
   .wg-tip{margin-top:6px;padding:6px 8px;border-left:3px solid #5aa9d6;background:#10202b}
-  .wg-warn{margin-top:6px;padding:6px 8px;border-left:3px solid #d6a85a;background:#2a2111}
   .wg-foot{margin-top:10px;font-size:11px;opacity:.72}
 `;
 
@@ -156,7 +145,6 @@ app.registerExtension({
     const original = nodeType.prototype.onNodeCreated;
     nodeType.prototype.onNodeCreated = function () {
       const result = original?.apply(this, arguments);
-
       const root = document.createElement("div");
       styleContainer(root);
       const style = document.createElement("style");
@@ -179,11 +167,8 @@ app.registerExtension({
         };
       }
 
-      this.addDOMWidget("guide", "gif_toolkit_guide", root, {
-        serialize: false,
-        hideOnZoom: false,
-      });
-      this.setSize([510, 820]);
+      this.addDOMWidget("guide", "gif_toolkit_guide", root, { serialize: false, hideOnZoom: false });
+      this.setSize([510, 860]);
       update();
       return result;
     };
