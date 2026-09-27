@@ -69,9 +69,10 @@ def _load_font(choice, size):
 
 def _rgb(value, fallback):
     try:
-        return ImageColor.getrgb(str(value))
+        color = ImageColor.getrgb(str(value))
     except Exception:
-        return ImageColor.getrgb(fallback)
+        color = ImageColor.getrgb(fallback)
+    return tuple(color[:3])
 
 
 def _tensor_frame_to_pil(frame):
