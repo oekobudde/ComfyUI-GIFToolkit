@@ -2,114 +2,156 @@ import { app } from "../../scripts/app.js";
 
 const HELP = {
   Deutsch: `
-    <div class="wg-title">GIF Maker · Visual Designer Preview</div>
-    <div class="wg-sub">Vorschau zuerst · permanentes GIF erst nach Freigabe</div>
+    <div class="wg-title">GIF Toolkit · Multi-Text Designer</div>
+    <div class="wg-sub">Bis zu 3 Texte · visuell platzieren · Preview zuerst · Export erst nach Freigabe</div>
 
     <section><div class="wg-head"><span>1</span> → LOAD VIDEO</div>
       <div><b>Node:</b> VHS Load Video (Upload)</div>
-      <div>Video auswählen. Standard: 12 FPS, max. 144 geladene Frames.</div>
-      <div class="wg-tip">Normales Run speichert ab jetzt kein finales GIF mehr.</div>
+      <div>Video auswählen. Standard: 12 FPS, maximal 144 geladene Frames.</div>
+      <div class="wg-tip">Ein normaler Run erzeugt nur Vorschauen – noch kein finales GIF im Output-Ordner.</div>
     </section>
 
     <div class="wg-arrow">↓</div>
+
     <section><div class="wg-head"><span>2</span> → PREPARE</div>
       <div><b>Node:</b> GIF Prepare / Preset</div>
-      <div>• Small: 288 px · 6 FPS · 4.0 s</div>
-      <div>• Balanced: 320 px · 8 FPS · 5.0 s</div>
-      <div>• Quality: 384 px · 10 FPS · 5.5 s</div>
-      <div>• Auto erhält das Seitenverhältnis.</div>
+      <div>• <b>Small:</b> 288 px · 6 FPS · 4.0 s</div>
+      <div>• <b>Balanced:</b> 320 px · 8 FPS · 5.0 s</div>
+      <div>• <b>Quality:</b> 384 px · 10 FPS · 5.5 s</div>
+      <div>• <b>Custom:</b> Größe, FPS und Dauer frei</div>
+      <div>• <b>Auto (Input Image)</b> erhält das Seitenverhältnis.</div>
+      <div>• Ein festes Ratio führt einen mittigen Crop aus.</div>
     </section>
 
     <div class="wg-arrow">↓</div>
-    <section><div class="wg-head"><span>3A</span> → VISUAL TEXT DESIGNER</div>
-      <div><b>Node:</b> GIF Text Designer</div>
-      <div>• Einmal Run drücken, damit ein Preview-Frame geladen wird.</div>
-      <div>• Text direkt im Bild mit der Maus verschieben.</div>
-      <div>• Text, Font, Größe und Farben grafisch einstellen.</div>
-      <div>• Pfeilraster = schnelle Positionierung.</div>
-      <div>• Background, Outline und Shadow direkt ein-/ausschalten.</div>
-      <div>• Enable text overlay aus = kompletter Textpfad ist aus; Frames laufen unverändert durch.</div>
-      <div class="wg-tip">Nach dem ersten Run kannst du Position und Style lokal im Browser ändern, ohne jedes Mal neu zu rendern.</div>
+
+    <section><div class="wg-head"><span>3A</span> → MULTI-TEXT DESIGNER</div>
+      <div><b>Node:</b> GIF Multi-Text Designer</div>
+      <div>• Unterstützt <b>3 unabhängige Text-Layer</b>.</div>
+      <div>• <b>Enable text overlay</b> ist der Master-Schalter für alle Texte.</div>
+      <div>• Jeder Layer kann zusätzlich einzeln aktiviert/deaktiviert werden.</div>
+      <div>• Layer 1 / 2 / 3 oben auswählen.</div>
+      <div>• Klick auf einen Text im Bild wählt diesen Layer ebenfalls aus.</div>
+      <div>• Den ausgewählten Text direkt mit der Maus auf dem Bild verschieben.</div>
+      <div>• Jeder Layer besitzt eigenen Text, Font, Größe, Farbe, Position, Hintergrund, Outline und Shadow.</div>
+      <div>• <b>Duplicate → next</b> kopiert den aktiven Layer in den nächsten Slot.</div>
+      <div>• <b>Clear selected</b> leert nur den ausgewählten Layer.</div>
+      <div>• Das 3×3-Pfeilraster setzt den ausgewählten Text schnell an typische Positionen.</div>
+      <div>• <b>Advanced style</b> enthält Outline-Breite, Padding, Corner Radius, BG-Opacity, Shadow-X/Y und Line Spacing.</div>
+      <div class="wg-tip">Master-Schalter aus = keinerlei Text-Rendering. Die Frames laufen unverändert weiter – kein manuelles Bypassen nötig.</div>
+      <div class="wg-tip">Blinken ist in dieser Version global: alle aktiven Text-Layer blinken gemeinsam.</div>
     </section>
 
     <div class="wg-arrow">↓</div>
+
     <section><div class="wg-head"><span>3B</span> → TEXT / BLINK</div>
       <div><b>Node:</b> GIF Text Overlay</div>
-      <div>• blink_enabled aus = Text dauerhaft sichtbar.</div>
-      <div>• blink_on_seconds / blink_off_seconds = Blinkrhythmus.</div>
+      <div>• Rendert alle aktivierten Text-Layer auf den kompletten Frame-Batch.</div>
+      <div>• <b>blink_enabled = aus</b> → alle aktiven Texte dauerhaft sichtbar.</div>
+      <div>• <b>blink_on_seconds / blink_off_seconds</b> → gemeinsamer Blinkrhythmus.</div>
     </section>
 
     <div class="wg-arrow">↓</div>
-    <section><div class="wg-head"><span>4A</span> → GIF PREVIEW</div>
+
+    <section><div class="wg-head"><span>4A</span> → TEMP GIF PREVIEW</div>
       <div><b>Node:</b> VHS Video Combine · TEMP ONLY</div>
-      <div>Bei normalem Run entsteht nur ein temporäres Preview-GIF.</div>
-      <div>Es landet nicht dauerhaft im Output-Ordner.</div>
+      <div>Ein normaler Run erzeugt nur ein temporäres GIF zur Kontrolle.</div>
+      <div>Dieses Preview landet nicht dauerhaft im normalen Output-Ordner.</div>
     </section>
 
     <div class="wg-arrow">↓</div>
-    <section><div class="wg-head"><span>4B</span> → APPROVE / EXPORT</div>
+
+    <section><div class="wg-head"><span>4B</span> → APPROVE & EXPORT</div>
       <div><b>Node:</b> GIF Export Gate</div>
-      <div>Standard: <b>PREVIEW MODE</b> — finaler Saver ist blockiert.</div>
-      <div>Wenn alles passt: <b>EXPORT GIF NOW</b> drücken.</div>
+      <div>Standard: <b>PREVIEW MODE</b> – der finale Saver bleibt blockiert.</div>
+      <div>Wenn alles passt: <b>✓ APPROVE & EXPORT FINAL GIF</b> drücken.</div>
       <div>Der Button startet genau einen Export-Lauf und schaltet danach zurück auf Preview.</div>
     </section>
 
-    <div class="wg-foot">Benötigt: ComfyUI · VideoHelperSuite · ComfyUI-GIFToolkit</div>`,
+    <div class="wg-arrow">↓</div>
+
+    <section><div class="wg-head"><span>4C</span> → FINAL GIF</div>
+      <div><b>Node:</b> VHS Video Combine</div>
+      <div>Speichert erst nach der Freigabe dauerhaft nach <b>output/GIFToolkit</b>.</div>
+    </section>
+
+    <div class="wg-foot">Benötigt: ComfyUI · ComfyUI-VideoHelperSuite · ComfyUI-GIFToolkit</div>`,
 
   English: `
-    <div class="wg-title">GIF Maker · Visual Designer Preview</div>
-    <div class="wg-sub">Preview first · permanent GIF only after approval</div>
+    <div class="wg-title">GIF Toolkit · Multi-Text Designer</div>
+    <div class="wg-sub">Up to 3 text layers · visual placement · preview first · export only after approval</div>
 
     <section><div class="wg-head"><span>1</span> → LOAD VIDEO</div>
       <div><b>Node:</b> VHS Load Video (Upload)</div>
-      <div>Select a video. Default: 12 FPS, max. 144 loaded frames.</div>
-      <div class="wg-tip">A normal Run no longer writes a final GIF.</div>
+      <div>Select a video. Default: 12 FPS, maximum 144 loaded frames.</div>
+      <div class="wg-tip">A normal Run creates previews only – no permanent final GIF yet.</div>
     </section>
 
     <div class="wg-arrow">↓</div>
+
     <section><div class="wg-head"><span>2</span> → PREPARE</div>
       <div><b>Node:</b> GIF Prepare / Preset</div>
-      <div>• Small: 288 px · 6 FPS · 4.0 s</div>
-      <div>• Balanced: 320 px · 8 FPS · 5.0 s</div>
-      <div>• Quality: 384 px · 10 FPS · 5.5 s</div>
-      <div>• Auto preserves the source aspect ratio.</div>
+      <div>• <b>Small:</b> 288 px · 6 FPS · 4.0 s</div>
+      <div>• <b>Balanced:</b> 320 px · 8 FPS · 5.0 s</div>
+      <div>• <b>Quality:</b> 384 px · 10 FPS · 5.5 s</div>
+      <div>• <b>Custom:</b> free size, FPS and duration controls</div>
+      <div>• <b>Auto (Input Image)</b> preserves the source aspect ratio.</div>
+      <div>• A forced ratio performs a centered crop.</div>
     </section>
 
     <div class="wg-arrow">↓</div>
-    <section><div class="wg-head"><span>3A</span> → VISUAL TEXT DESIGNER</div>
-      <div><b>Node:</b> GIF Text Designer</div>
-      <div>• Run once to load a preview frame.</div>
-      <div>• Drag the text directly on the image.</div>
-      <div>• Edit text, font, size and colors graphically.</div>
-      <div>• Arrow grid = fast positioning shortcuts.</div>
-      <div>• Toggle background, outline and shadow directly.</div>
-      <div>• Disable Enable text overlay to bypass all text rendering; frames pass through unchanged.</div>
-      <div class="wg-tip">After the first Run, position and style changes are local in the browser and do not require repeated rendering.</div>
+
+    <section><div class="wg-head"><span>3A</span> → MULTI-TEXT DESIGNER</div>
+      <div><b>Node:</b> GIF Multi-Text Designer</div>
+      <div>• Supports <b>3 independent text layers</b>.</div>
+      <div>• <b>Enable text overlay</b> is the master switch for all text.</div>
+      <div>• Each layer can also be enabled or disabled individually.</div>
+      <div>• Select Layer 1 / 2 / 3 at the top.</div>
+      <div>• Clicking a text directly on the image also selects that layer.</div>
+      <div>• Drag the selected text directly on the image.</div>
+      <div>• Every layer has its own text, font, size, color, position, background, outline and shadow.</div>
+      <div>• <b>Duplicate → next</b> copies the active layer into the next slot.</div>
+      <div>• <b>Clear selected</b> clears only the selected layer.</div>
+      <div>• The 3×3 arrow grid quickly moves the selected text to common positions.</div>
+      <div>• <b>Advanced style</b> contains outline width, padding, corner radius, BG opacity, shadow X/Y and line spacing.</div>
+      <div class="wg-tip">Master switch off = no text rendering at all. Frames pass through unchanged; no manual bypassing is required.</div>
+      <div class="wg-tip">Blinking is global in this version: all active text layers blink together.</div>
     </section>
 
     <div class="wg-arrow">↓</div>
+
     <section><div class="wg-head"><span>3B</span> → TEXT / BLINK</div>
       <div><b>Node:</b> GIF Text Overlay</div>
-      <div>• blink_enabled off = text stays visible.</div>
-      <div>• blink_on_seconds / blink_off_seconds = blink rhythm.</div>
+      <div>• Renders all enabled text layers across the complete frame batch.</div>
+      <div>• <b>blink_enabled off</b> → all active text remains continuously visible.</div>
+      <div>• <b>blink_on_seconds / blink_off_seconds</b> → shared blink rhythm.</div>
     </section>
 
     <div class="wg-arrow">↓</div>
-    <section><div class="wg-head"><span>4A</span> → GIF PREVIEW</div>
+
+    <section><div class="wg-head"><span>4A</span> → TEMP GIF PREVIEW</div>
       <div><b>Node:</b> VHS Video Combine · TEMP ONLY</div>
-      <div>A normal Run creates only a temporary preview GIF.</div>
-      <div>It is not permanently written to the output folder.</div>
+      <div>A normal Run creates only a temporary GIF for review.</div>
+      <div>The preview is not permanently written to the normal output folder.</div>
     </section>
 
     <div class="wg-arrow">↓</div>
-    <section><div class="wg-head"><span>4B</span> → APPROVE / EXPORT</div>
+
+    <section><div class="wg-head"><span>4B</span> → APPROVE & EXPORT</div>
       <div><b>Node:</b> GIF Export Gate</div>
-      <div>Default: <b>PREVIEW MODE</b> — final saver is blocked.</div>
-      <div>When satisfied, click <b>EXPORT GIF NOW</b>.</div>
-      <div>The button starts one export run, then returns to preview mode.</div>
+      <div>Default: <b>PREVIEW MODE</b> – the final saver remains blocked.</div>
+      <div>When satisfied, click <b>✓ APPROVE & EXPORT FINAL GIF</b>.</div>
+      <div>The button starts one export run, then returns the workflow to preview mode.</div>
     </section>
 
-    <div class="wg-foot">Requires: ComfyUI · VideoHelperSuite · ComfyUI-GIFToolkit</div>`
+    <div class="wg-arrow">↓</div>
+
+    <section><div class="wg-head"><span>4C</span> → FINAL GIF</div>
+      <div><b>Node:</b> VHS Video Combine</div>
+      <div>Saves permanently to <b>output/GIFToolkit</b> only after approval.</div>
+    </section>
+
+    <div class="wg-foot">Requires: ComfyUI · ComfyUI-VideoHelperSuite · ComfyUI-GIFToolkit</div>`
 };
 
 function styleContainer(el) {
@@ -168,7 +210,7 @@ app.registerExtension({
       }
 
       this.addDOMWidget("guide", "gif_toolkit_guide", root, { serialize: false, hideOnZoom: false });
-      this.setSize([510, 860]);
+      this.setSize([510, 940]);
       update();
       return result;
     };
