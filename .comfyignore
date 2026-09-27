@@ -1,0 +1,4 @@
+# Keep the example workflow, web extension and user documentation in Registry packages.
+# Development-only files can be added here later if the repository grows.
+.github/
+PUBLISHING.md
