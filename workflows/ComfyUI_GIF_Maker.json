@@ -214,12 +214,12 @@
       "id": 9,
       "type": "GIFToolkitTextDesigner",
       "pos": [
-        760,
+        740,
         20
       ],
       "size": [
-        560,
-        760
+        580,
+        900
       ],
       "flags": {},
       "order": 3,
@@ -415,7 +415,7 @@
           "links": null
         }
       ],
-      "title": "4A → PREVIEW GIF · TEMP ONLY",
+      "title": "4A → TEMP GIF PREVIEW · check before export",
       "properties": {
         "cnr_id": "comfyui-videohelpersuite",
         "ver": "1.7.9",
@@ -445,12 +445,12 @@
       "id": 14,
       "type": "GIFToolkitExportGate",
       "pos": [
-        1760,
-        520
+        2140,
+        20
       ],
       "size": [
-        330,
-        160
+        370,
+        185
       ],
       "flags": {},
       "order": 6,
@@ -471,7 +471,7 @@
           ]
         }
       ],
-      "title": "4B → EXPORT GATE · preview by default",
+      "title": "4B → APPROVE & EXPORT · CLICK HERE",
       "properties": {
         "Node name for S&R": "GIFToolkitExportGate"
       },
@@ -489,7 +489,7 @@
       "type": "VHS_VideoCombine",
       "pos": [
         2140,
-        300
+        245
       ],
       "size": [
         350,
@@ -538,7 +538,7 @@
           "links": null
         }
       ],
-      "title": "4C → SAVE FINAL GIF · only after approval",
+      "title": "4C → FINAL GIF · saved only after approval",
       "properties": {
         "cnr_id": "comfyui-videohelpersuite",
         "ver": "1.7.9",
@@ -686,10 +686,10 @@
       "id": 3,
       "title": "3 → VISUAL TEXT DESIGNER + BLINK",
       "bounding": [
-        720,
+        700,
         -20,
-        1030,
-        820
+        1060,
+        980
       ],
       "color": "#8a6335",
       "font_size": 24,
@@ -701,8 +701,8 @@
       "bounding": [
         1720,
         -20,
-        820,
-        800
+        840,
+        760
       ],
       "color": "#3f7848",
       "font_size": 24,
@@ -718,9 +718,9 @@
     "VHS_MetadataImage": true,
     "VHS_KeepIntermediate": true,
     "ds": {
-      "scale": 0.58,
+      "scale": 0.55,
       "offset": [
-        830,
+        820,
         450
       ]
     },
