@@ -1,105 +1,48 @@
 # ComfyUI-GIFToolkit
 
-Create compact looping GIFs from short videos directly in ComfyUI — with presets, automatic aspect-ratio handling, optional blinking text and a bilingual on-canvas guide.
+Create compact looping GIFs from short videos directly in ComfyUI, with preset sizing, visual multi-text placement, optional blinking, a preview-first export flow, and bilingual help.
 
 **Deutsch:** [Direkt zum deutschen Teil](#deutsch) · **English:** [Jump to English](#english)
 
-
-> **v0.2 development preview:** The branch `feature/text-overlay-v0.2` replaces the example workflow's KJNodes text path with native GIF Toolkit nodes. The current v0.2 test workflow only requires **ComfyUI-VideoHelperSuite** plus this repository.
-
-### v0.2 text workflow / Text-Workflow
-
-```text
-Load Video
-   ↓
-GIF Prepare / Preset
-   ├──→ GIF Text Preview → Preview Image
-   ↓
-GIF Text Style ─────────→ GIF Text Overlay
-                           ↓
-                       Save GIF
-```
-
-**Deutsch:** `GIF Text Style` verwendet verständliche Positionen wie `Top Center`, `Center` oder `Bottom Right`. `margin_x` und `margin_y` sind nur noch Randabstände. Mit `enabled = false` kann Text ohne Umverkabeln komplett abgeschaltet werden. `GIF Text Overlay` übernimmt auch das Blinken.
-
-**English:** `GIF Text Style` uses human-friendly anchors such as `Top Center`, `Center` or `Bottom Right`. `margin_x` and `margin_y` are only edge margins. Set `enabled = false` to disable text without rewiring. `GIF Text Overlay` also handles blinking.
-
-> The detailed v0.1/KJNodes parameter reference further down is retained temporarily during this development branch and will be replaced before the v0.2 merge.
-
-> **v0.3 visual-designer preview:** The branch `feature/visual-designer-v0.3` adds an inline drag-and-drop text editor and a preview-first export workflow.
-
-### Visual designer / Visueller Designer
-
-```text
-Load Video
-   ↓
-GIF Prepare / Preset
-   ├────────────→ GIF Text Designer
-   │                    │
-   │                    └── style
-   ↓                         ↓
-GIF Text Overlay ─────→ TEMP GIF PREVIEW
-   │
-   └──→ GIF Export Gate ──→ Final GIF Saver
-          (blocked by default)
-```
-
-**Deutsch:** Nach einem normalen `Run` siehst du den Text direkt auf einer grafischen Arbeitsfläche und kannst ihn mit der Maus verschieben. Text, Font, Größe, Farbe, Hintergrund, Outline und Shadow lassen sich dort direkt ändern. Gleichzeitig wird nur ein **temporäres Preview-GIF** erzeugt. Erst `EXPORT GIF NOW` gibt den finalen Saver für genau einen Exportlauf frei.
-
-**English:** After a normal `Run`, the designer shows the text directly on a visual canvas where it can be dragged with the mouse. Text, font, size, color, background, outline and shadow can be edited in the same UI. A normal run creates only a **temporary preview GIF**. `EXPORT GIF NOW` enables the permanent saver for one export run.
-
-> **Status:** Development / pre-release. The workflow and custom nodes are already usable, but the package has not yet been published to the ComfyUI Registry.
+> **Status:** Development / pre-release. The current development workflow supports up to three independent text layers and is not yet published to the ComfyUI Registry.
 
 ---
 
 # Deutsch
 
-## Was macht das Projekt?
+## Überblick
 
-`ComfyUI-GIFToolkit` ergänzt ComfyUI um kleine Helper-Nodes und einen fertigen Beispielworkflow, um kurze Videos in kompakte, wiederholende GIFs umzuwandeln.
+`ComfyUI-GIFToolkit` ergänzt ComfyUI um eigene Helper-Nodes und einen fertigen Workflow für kurze GIFs.
 
-Der mitgelieferte Workflow übernimmt dabei:
+Der aktuelle Workflow:
 
-1. Video laden und schon beim Laden verkleinern
-2. Preset, Seitenverhältnis, FPS und Dauer festlegen
-3. optional Text einblenden und automatisch blinken lassen
-4. das Ergebnis als GIF speichern
+1. lädt ein Video über **VideoHelperSuite**
+2. legt Größe, Seitenverhältnis, FPS und Dauer fest
+3. erlaubt bis zu **3 unabhängige Text-Layer**
+4. zeigt Text und GIF zunächst nur als Vorschau
+5. speichert das finale GIF erst nach ausdrücklicher Freigabe
 
-Der Workflow enthält außerdem einen **Deutsch/English-Hilfe-Node**, der direkt in ComfyUI erklärt, welche Bereiche wofür gedacht sind.
-
-## Enthaltene Custom Nodes
-
-| Node | Zweck |
-|---|---|
-| `GIF Toolkit Guide / Hilfe (DE-EN)` | Zweisprachige Hilfe direkt auf der ComfyUI-Arbeitsfläche |
-| `GIF Preset / Prepare` | Presets, Ratio, FPS, Dauer, Resize und Blink-Zeitplan |
-| `GIF Prepare / Blink Schedule` | ältere kompatible Helper-Node aus v2 |
-
-Der Beispielworkflow verwendet zusätzlich Nodes aus **ComfyUI-VideoHelperSuite** und **ComfyUI-KJNodes**.
+Der Text-Designer ist grafisch aufgebaut: Texte können direkt auf dem Preview-Frame angeklickt und mit der Maus verschoben werden.
 
 ## Voraussetzungen
 
 - ComfyUI
 - [ComfyUI-VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite)
-- [ComfyUI-KJNodes](https://github.com/kijai/ComfyUI-KJNodes)
 - dieses Repository: `ComfyUI-GIFToolkit`
 
-Für `ComfyUI-GIFToolkit` selbst sind aktuell **keine zusätzlichen pip-Pakete** erforderlich.
+**KJNodes wird im aktuellen Workflow nicht mehr benötigt.**
 
-### Drittanbieter-Abhängigkeiten
+Für `ComfyUI-GIFToolkit` selbst sind derzeit keine zusätzlichen pip-Pakete erforderlich.
 
-Der Beispielworkflow verwendet Nodes aus diesen eigenständigen Projekten:
+### Drittanbieter-Abhängigkeit
 
-- [ComfyUI-VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) von Kosinkadink
-- [ComfyUI-KJNodes](https://github.com/kijai/ComfyUI-KJNodes) von kijai
+Der Beispielworkflow verwendet Nodes aus **ComfyUI-VideoHelperSuite** von Kosinkadink.
 
-Diese Projekte werden **nicht** mit diesem Repository gebündelt. Bitte installiere sie separat aus ihren jeweiligen Original-Repositories oder über den ComfyUI Manager.
-
-Zum Zeitpunkt dieser Dokumentation deklarieren beide Upstream-Repositories **GPL-3.0**. Urheberrechte und Lizenzbedingungen dieser Projekte verbleiben bei den jeweiligen Autoren. `ComfyUI-GIFToolkit` enthält keinen kopierten Quellcode dieser Abhängigkeiten; der mitgelieferte Workflow verweist lediglich auf deren Node-Typen.
+VideoHelperSuite wird **nicht** mit diesem Repository gebündelt. Bitte separat aus dem Original-Repository oder über den ComfyUI Manager installieren. Urheberrecht und Lizenzbedingungen verbleiben beim jeweiligen Projekt.
 
 ## Installation
 
-### Variante A — Git
+### Git
 
 Im Ordner `ComfyUI/custom_nodes`:
 
@@ -108,221 +51,137 @@ cd ComfyUI/custom_nodes
 git clone https://github.com/oekobudde/ComfyUI-GIFToolkit.git
 ```
 
-Danach ComfyUI **vollständig neu starten**.
+Danach ComfyUI vollständig neu starten.
 
-> Die endgültige GitHub-URL wird vor der öffentlichen Veröffentlichung in dieser README eingetragen.
-
-### Variante B — ZIP
+### ZIP
 
 1. Repository als ZIP herunterladen.
 2. Entpacken.
-3. Den Ordner als
-   `ComfyUI/custom_nodes/ComfyUI-GIFToolkit`
-   ablegen.
+3. Als `ComfyUI/custom_nodes/ComfyUI-GIFToolkit` ablegen.
 4. ComfyUI vollständig neu starten.
 
-### Abhängigkeiten installieren
+### VideoHelperSuite
 
-Falls VideoHelperSuite oder KJNodes noch fehlen, können sie über den ComfyUI Manager oder manuell installiert werden.
-
-Manuell:
+Falls noch nicht installiert:
 
 ```bash
 cd ComfyUI/custom_nodes
 git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git
-git clone https://github.com/kijai/ComfyUI-KJNodes.git
 ```
 
-Danach ComfyUI erneut starten.
-
-### Später über ComfyUI Manager / Registry
-
-Nach der öffentlichen Veröffentlichung in der ComfyUI Registry soll das Paket direkt über den ComfyUI Manager installierbar sein. Bis dahin bitte Git oder ZIP verwenden.
+Danach ComfyUI neu starten.
 
 ## Workflow laden
 
-Der fertige Beispielworkflow liegt unter:
+Der Beispielworkflow liegt unter:
 
 ```text
 workflows/ComfyUI_GIF_Maker.json
 ```
 
-Die vier Hauptbereiche sind:
+Hauptbereiche:
 
 ```text
 1 → LOAD VIDEO
-        ↓
-2 → PRESET / PREPARE
-        ↓
-3 → TEXT / BLINK
-        ↓
-4 → SAVE GIF
+      ↓
+2 → PREPARE
+      ↓
+3 → MULTI-TEXT DESIGNER + BLINK
+      ↓
+4 → TEMP PREVIEW → APPROVE → FINAL EXPORT
 ```
 
 ## Schnellstart
 
 1. In `1 → LOAD VIDEO` ein kurzes Video auswählen.
-2. In `2 → PRESET / PREPARE` zunächst `Small` oder `Balanced` testen.
+2. In `2 → PREPARE` zunächst `Balanced` verwenden.
 3. `aspect_ratio = Auto (Input Image)` lassen, wenn das Originalformat erhalten bleiben soll.
-4. Optional im `Add Label`-Node Text, Position, Schriftgröße und Farbe einstellen.
-5. Workflow starten.
-6. Das GIF wird über `VHS Video Combine` gespeichert.
+4. Workflow einmal mit **Run** starten.
+5. Im **GIF Multi-Text Designer** Texte platzieren und gestalten.
+6. Das temporäre GIF bei `4A` prüfen.
+7. Erst wenn alles passt: **✓ APPROVE & EXPORT FINAL GIF** drücken.
+
+Ein normaler Run schreibt **kein finales GIF** dauerhaft in den Output-Ordner.
 
 ## Presets
 
-| Preset | Lange Seite | FPS | maximale Dauer | Empfehlung |
+| Preset | Lange Seite | FPS | maximale Dauer | Einsatz |
 |---|---:|---:|---:|---|
-| `Small` | 288 px | 6 | 4.0 s | kleine Chat-Datei |
+| `Small` | 288 px | 6 | 4.0 s | kleine Chat-GIFs |
 | `Balanced` | 320 px | 8 | 5.0 s | guter Standard |
-| `Quality` | 384 px | 10 | 5.5 s | höhere Qualität, größere Datei |
+| `Quality` | 384 px | 10 | 5.5 s | höhere Qualität |
 | `Custom` | frei | frei | frei | eigene Werte |
 
-> Die endgültige GIF-Größe hängt stark von Bewegung, Bildrauschen, Farbwechseln und Motivdetails ab. Ein bestimmtes MB-Limit kann deshalb nicht garantiert werden.
+> Die tatsächliche Dateigröße hängt stark von Bewegung, Bildrauschen, Farbwechseln und Motivdetails ab. Ein festes MB-Limit kann nicht garantiert werden.
 
 ---
 
-# Feldreferenz — Deutsch
+## Feldreferenz — Deutsch
 
-## 0 · GIF Toolkit Guide / Hilfe (DE-EN)
+### 0 · GIF Toolkit Guide / Hilfe
 
-### `language`
-Schaltet den Hilfe-Node direkt im Workflow zwischen `Deutsch` und `English` um.
+#### `language`
+Schaltet die Hilfe direkt im Workflow zwischen `Deutsch` und `English` um.
 
-Der Guide ist nur eine Bedienhilfe und verändert das GIF nicht.
+Der Guide verändert das GIF nicht.
 
 ---
 
-## 1 · VHS Load Video
+### 1 · VHS Load Video
 
-Dieser Node kommt aus **ComfyUI-VideoHelperSuite** und lädt das Eingabevideo als Bildsequenz.
+Kommt aus **ComfyUI-VideoHelperSuite**.
 
-### `video`
-Die Videodatei, die verarbeitet werden soll.
+#### `video`
+Eingabevideo.
 
-### `force_rate`
-Erzwingt beim Laden eine bestimmte Bildrate.
-
-Im Beispielworkflow:
+#### `force_rate`
+FPS beim Laden. Im Beispiel:
 
 ```text
-12 FPS
+12
 ```
 
-Ein Video mit z. B. 24 oder 30 FPS wird dadurch bereits beim Laden auf eine kleinere, GIF-freundliche Bildrate gebracht. Das spart Arbeitsspeicher und Rechenzeit.
-
-### `custom_width`
-Zielbreite bereits beim Laden.
-
-Im Beispielworkflow:
+#### `custom_width` / `custom_height`
+Standard im öffentlichen Workflow:
 
 ```text
-0
+0 / 0
 ```
 
-Damit bleibt der Loader zunächst neutral. Die eigentliche GIF-Zielgröße wird später in `GIF Preset / Prepare` festgelegt.
+Damit startet der Loader neutral. Für sehr große Quellen kann `custom_width` optional z. B. auf `512` gesetzt werden.
 
-Optional kann hier z. B. `512` gesetzt werden, um sehr große Eingabevideos bereits beim Laden zu verkleinern.
-
-Große 2K-/4K-Videos werden dadurch früh verkleinert.
-
-### `custom_height`
-Zielhöhe beim Laden.
-
-Im Beispielworkflow:
-
-```text
-0
-```
-
-`0` deaktiviert die feste Höhe. Zusammen mit `custom_width = 512` bleibt dadurch das Seitenverhältnis des Eingabevideos erhalten.
-
-Wenn sowohl Breite als auch Höhe gesetzt werden, kann VideoHelperSuite das Bild passend auf diese Vorgabe zuschneiden.
-
-### `frame_load_cap`
-Maximale Anzahl Frames, die geladen werden.
-
-Im Beispielworkflow:
+#### `frame_load_cap`
+Standard:
 
 ```text
 144
 ```
 
-Bei `force_rate = 12` entspricht das maximal ungefähr 12 Sekunden.
+Bei 12 FPS entspricht das ungefähr 12 Sekunden maximal geladener Videolänge.
 
-`0` bedeutet bei VideoHelperSuite: kein Frame-Limit.
+#### `skip_first_frames`
+Überspringt Frames am Anfang.
 
-### `skip_first_frames`
-Überspringt Frames am Anfang des Videos.
-
-Beispiel:
-
-```text
-24
-```
-
-würde bei 12 FPS ungefähr die ersten 2 Sekunden überspringen.
-
-Im Beispielworkflow steht der Wert auf `0`.
-
-### `select_every_nth`
-Behält nur jeden n-ten Frame.
-
-- `1` = jeden Frame behalten
+#### `select_every_nth`
+- `1` = jeden Frame
 - `2` = jeden zweiten Frame
-- `3` = jeden dritten Frame
+- usw.
 
-Normalerweise sollte im mitgelieferten Workflow `1` verwendet werden, weil die spätere Preset-Node die endgültige GIF-FPS festlegt.
-
-### `format`
-Optionales Ladeformat von VideoHelperSuite. Im Beispielworkflow steht es auf `None`.
-
-Für den normalen GIF-Workflow muss hier in der Regel nichts geändert werden.
-
-### `choose video to upload`
-Upload-Schaltfläche von VideoHelperSuite, um ein lokales Video in den ComfyUI-Input-Ordner zu übernehmen.
-
-### `videopreview`
-Vorschau des geladenen Videos. Sie ist nur eine UI-Vorschau und verändert die eigentlichen Frames nicht.
-
-### wichtige Outputs
-
-| Output | Bedeutung |
-|---|---|
-| `IMAGE` | geladene Videoframes |
-| `frame_count` | Anzahl geladener Frames |
-| `audio` | Audiospur, falls vorhanden |
-| `video_info` | Metadaten wie geladene bzw. ursprüngliche FPS |
+Im Beispielworkflow normalerweise `1`.
 
 ---
 
-## 2 · GIF Preset / Prepare
+### 2 · GIF Prepare / Preset
 
-Das ist die zentrale Node dieses Projekts.
+Bereitet die Videoframes für das GIF vor.
 
-Sie übernimmt:
-
-- Preset-Auswahl
-- Zielgröße
-- Ziel-FPS
-- maximale GIF-Dauer
-- Seitenverhältnis / Center Crop
-- automatischen Blink-Zeitplan
-
-### `preset`
-Verfügbare Werte:
-
+#### `preset`
 - `Small`
 - `Balanced`
 - `Quality`
 - `Custom`
 
-Bei den drei fertigen Presets werden Größe, FPS und Dauer automatisch festgelegt.
-
-Nur bei `Custom` werden die drei `custom_*`-Felder verwendet.
-
-### `aspect_ratio`
-Verfügbare Werte:
-
+#### `aspect_ratio`
 - `Auto (Input Image)`
 - `1:1`
 - `16:9`
@@ -330,322 +189,207 @@ Verfügbare Werte:
 - `4:3`
 - `3:4`
 
-#### `Auto (Input Image)`
-Behält das Seitenverhältnis des Eingabevideos bei.
+`Auto` behält das Quellformat. Ein festes Verhältnis führt einen mittigen Crop aus.
 
-Beispiele:
+#### `custom_long_side`
+Nur bei `Custom`: Pixelgröße der längeren Seite.
 
-- 1:1 bleibt 1:1
-- 16:9 bleibt 16:9
-- 9:16 bleibt 9:16
-- ungewöhnliche Formate bleiben ebenfalls erhalten
+#### `custom_fps`
+Nur bei `Custom`: Ausgabe-FPS.
 
-#### festes Seitenverhältnis
-Wenn z. B. `1:1` oder `9:16` gewählt wird, wird das Bild **mittig zugeschnitten**, bis das gewünschte Verhältnis erreicht ist.
+#### `custom_duration_seconds`
+Nur bei `Custom`: maximale Dauer.
 
-Es wird dabei nicht einfach verzerrt.
-
-### `custom_long_side`
-Nur bei `preset = Custom` aktiv.
-
-Legt die Pixelgröße der **längeren Bildseite** fest.
-
-Bereich der Node:
-
-```text
-128–512 px
-```
-
-Beispiel:
-
-- 16:9 + `320` → ungefähr 320 × 180
-- 9:16 + `320` → ungefähr 180 × 320
-- 1:1 + `320` → 320 × 320
-
-Die Node rundet auf gerade Abmessungen.
-
-### `custom_fps`
-Nur bei `preset = Custom` aktiv.
-
-Legt die GIF-Bildrate fest.
-
-Bereich:
-
-```text
-2–12 FPS
-```
-
-Niedrigere FPS ergeben meist deutlich kleinere GIF-Dateien.
-
-### `custom_duration_seconds`
-Nur bei `preset = Custom` aktiv.
-
-Maximale Dauer des GIFs.
-
-Bereich:
-
-```text
-0.5–12.0 Sekunden
-```
-
-Wenn das Eingabevideo kürzer ist, wird natürlich nur die tatsächlich vorhandene Länge verwendet.
-
-### `blink_on_seconds`
-Wie lange der Text innerhalb eines Blink-Zyklus sichtbar bleibt.
-
-Standard:
-
-```text
-0.5 s
-```
-
-### `blink_off_seconds`
-Wie lange der Text innerhalb eines Blink-Zyklus unsichtbar bleibt.
-
-Standard:
-
-```text
-0.5 s
-```
-
-Beispiel:
-
-```text
-blink_on_seconds  = 0.4
-blink_off_seconds = 0.2
-```
-
-macht ein schnelleres Blinken mit längerer Sichtbar- als Unsichtbarphase.
-
-### Outputs
-
-| Output | Bedeutung |
-|---|---|
-| `images` | fertig gesampelte und skalierte Frames |
-| `text_on_indexes` | Frame-Indizes, auf denen der Text sichtbar sein soll |
-| `fps` | endgültige GIF-FPS |
-| `frame_count` | Anzahl der Ausgabe-Frames |
-| `duration_seconds` | tatsächliche Dauer |
-| `width` | endgültige Breite |
-| `height` | endgültige Höhe |
-| `settings` | kurze Zusammenfassung der verwendeten Einstellungen |
+#### Outputs
+- `images` – vorbereitete Frames
+- `fps` – endgültige GIF-FPS
+- `frame_count`
+- `duration_seconds`
+- `width`
+- `height`
+- `settings`
 
 ---
 
-## 3A · Add Label
+### 3A · GIF Multi-Text Designer
 
-Dieser Node kommt aus **ComfyUI-KJNodes** und zeichnet den Text auf die ausgewählten Videoframes.
+Die zentrale Text-UI.
 
-### `text_x`
-Horizontaler Abstand des Textes vom linken Rand.
+#### `Enable text overlay`
+Master-Schalter.
 
-Größerer Wert = weiter nach rechts.
+- **an** → aktive Text-Layer werden gerendert
+- **aus** → keinerlei Text; Frames laufen unverändert weiter
 
-### `text_y`
-Vertikaler Abstand des Textes vom oberen Rand.
+Es ist kein manuelles Bypassen von Nodes nötig.
 
-Größerer Wert = weiter nach unten.
+### Text-Layer
 
-### `height`
-Höhe einer zusätzlichen Label-Fläche, wenn `direction` auf `up`, `down`, `left` oder `right` steht.
+Der Designer unterstützt aktuell genau **3 Layer**.
 
-Bei unserem Standard:
+Jeder Layer besitzt eigene Werte für:
 
-```text
-direction = overlay
-```
+- an / aus
+- Text
+- Font
+- Schriftgröße
+- Schriftfarbe
+- X/Y-Position
+- Hintergrund
+- Hintergrundfarbe
+- Hintergrund-Transparenz
+- Padding
+- Corner Radius
+- Outline
+- Outline-Farbe
+- Outline-Breite
+- Shadow
+- Shadow-Farbe
+- Shadow-X/Y
+- Line Spacing
 
-wird der Text direkt auf das Bild gezeichnet; `height` ist dann für die Bildgröße nicht relevant.
-
-### `font_size`
-Schriftgröße in Pixeln.
-
-### `font_color`
-Schriftfarbe.
-
-Beispiele:
-
-```text
-yellow
-white
-red
-#FFD700
-```
-
-### `label_color`
-Hintergrundfarbe der zusätzlichen Label-Fläche bei den Nicht-Overlay-Modi.
-
-Bei `direction = overlay` wird keine separate Label-Fläche erzeugt, deshalb ist dieser Wert normalerweise nicht sichtbar.
-
-### `font`
-Ausgewählte Schriftart.
-
-KJNodes lädt Fonts aus seinem Font-Verzeichnis. Welche Fonts verfügbar sind, hängt von deiner lokalen KJNodes-Installation ab.
-
-### `text`
-Der Text, der eingeblendet werden soll.
-
-Beispiel:
+#### Layer auswählen
+Oben im Designer:
 
 ```text
-LET'S GO!
+Layer 1   Layer 2   Layer 3
 ```
 
-### `direction`
-Mögliche Werte:
+Der gold markierte Layer ist aktiv.
 
-- `overlay`
-- `up`
-- `down`
-- `left`
-- `right`
+Ein Klick direkt auf einen sichtbaren Text im Preview wählt ebenfalls diesen Layer aus.
 
-Für diesen Workflow empfehlen wir:
+#### Text verschieben
+Den ausgewählten Text direkt im Bild anklicken und ziehen.
+
+Die Position wird relativ in Prozent gespeichert. Dadurch bleibt sie unabhängig von der tatsächlichen GIF-Auflösung sinnvoll.
+
+#### `Enable selected layer`
+Schaltet nur den aktuell ausgewählten Layer an oder aus.
+
+#### `Duplicate → next`
+Kopiert den aktiven Layer in den nächsten der drei Slots und versetzt ihn leicht, damit beide Texte sichtbar bleiben.
+
+#### `Clear selected`
+Leert und deaktiviert nur den ausgewählten Layer.
+
+#### 3×3-Positionsraster
+Setzt den ausgewählten Layer schnell auf typische Positionen:
 
 ```text
-overlay
+↖   ↑   ↗
+←   •   →
+↙   ↓   ↘
 ```
 
-Dann bleibt die GIF-Auflösung unverändert und der Text liegt direkt über dem Bild.
+#### Background
+Optionale Hintergrundbox pro Layer.
 
-### `caption`
-Optionaler String-Eingang. Wird er verbunden, kann für einzelne Bilder/Frames ein externer Caption-Text geliefert werden.
+#### Outline
+Eigene Kontur pro Layer.
 
-Im Beispielworkflow bleibt dieser Eingang unverbunden und das Feld `text` wird verwendet.
+#### Shadow
+Eigener Schatten pro Layer.
+
+#### Advanced style
+Enthält:
+
+- Outline width
+- Padding
+- Corner radius
+- BG opacity
+- Shadow X
+- Shadow Y
+- Line spacing
+
+Die Node passt ihre Höhe beim Auf- und Zuklappen automatisch an.
+
+#### Preview Frame
+Wählt den Einzel-Frame, der im Designer angezeigt wird.
+
+`Refresh frame` startet einen Preview-Lauf, ohne ein finales GIF dauerhaft zu speichern.
 
 ---
 
-## 3B · Get Images From Batch Indexed
+### 3B · GIF Text Overlay
 
-KJNodes-Node. Sie nimmt nur die Frames heraus, auf denen der Text sichtbar sein soll.
+Wendet die Layer-Konfiguration auf den kompletten Frame-Batch an.
 
-### `indexes`
-Liste der Frame-Indizes.
+#### `blink_enabled`
+- an → alle aktiven Layer blinken gemeinsam
+- aus → alle aktiven Layer bleiben dauerhaft sichtbar
 
-Im Workflow wird dieser Wert **automatisch** vom Output `text_on_indexes` der Prepare-Node geliefert.
+#### `blink_on_seconds`
+Dauer der sichtbaren Blinkphase.
 
-Normalerweise nicht manuell ändern.
+#### `blink_off_seconds`
+Dauer der unsichtbaren Blinkphase.
 
----
-
-## 3C · Insert Images To Batch Indexed
-
-KJNodes-Node. Sie setzt die zuvor beschrifteten Frames wieder an die richtigen Stellen in die ursprüngliche Bildsequenz ein.
-
-### `indexes`
-Wird ebenfalls automatisch vom Blink-Zeitplan geliefert.
-
-### `mode`
-Im Workflow:
-
-```text
-replace
-```
-
-Dadurch werden die entsprechenden Originalframes durch die beschrifteten Frames ersetzt.
-
-`insert` würde zusätzliche Frames einfügen und damit Timing und Dauer verändern; für diesen Workflow sollte deshalb `replace` verwendet werden.
+> In der aktuellen Multi-Text-Version ist Blinken **global**. Eigene Blink-Zeiten pro Layer sind noch nicht enthalten.
 
 ---
 
-## 4 · VHS Video Combine
+### 4A · TEMP GIF PREVIEW
 
-Dieser Node kommt aus **ComfyUI-VideoHelperSuite** und speichert die endgültige Bildsequenz als animiertes GIF.
-
-### `frame_rate`
-Die Ausgabe-FPS.
-
-Im Beispielworkflow ist dieser Eingang mit dem `fps`-Output der Prepare-Node verbunden und wird deshalb **automatisch gesetzt**.
-
-### `loop_count`
-Loop-Wert des animierten GIFs.
-
-Im Beispielworkflow:
+VHS Video Combine mit:
 
 ```text
-0
+save_output = false
 ```
 
-Bei GIF-Ausgabe bedeutet `0` eine Endlosschleife.
+Der normale Run erzeugt nur ein temporäres GIF zur Kontrolle.
 
-### `filename_prefix`
-Dateiname bzw. Unterordner + Dateiname.
+---
 
-Beispiel:
+### 4B · GIF Export Gate
+
+Standardmäßig blockiert diese Node den finalen Saver.
+
+Status:
 
 ```text
-GIFToolkit/ComfyUI_GIF
+PREVIEW MODE
 ```
 
-Dann landet das Ergebnis im Unterordner `GIFToolkit` des ComfyUI-Output-Ordners.
+Wenn das Preview stimmt:
 
-### `format`
-Für diesen Workflow:
+**✓ APPROVE & EXPORT FINAL GIF**
+
+Der Button startet einen finalen Exportlauf und schaltet anschließend wieder in den Preview-Modus zurück.
+
+---
+
+### 4C · FINAL GIF
+
+Der finale VHS Video Combine speichert erst nach Freigabe dauerhaft nach:
 
 ```text
-image/gif
+ComfyUI/output/GIFToolkit
 ```
-
-Nicht auf MP4/WebM ändern, wenn tatsächlich ein GIF erzeugt werden soll.
-
-### `pingpong`
-Wenn aktiviert, wird die Sequenz vorwärts und anschließend rückwärts abgespielt.
-
-Das kann bei sehr kurzen Loops einen weicheren Übergang erzeugen, verdoppelt aber ungefähr die Anzahl der abgespielten Frames.
-
-Standard:
-
-```text
-false
-```
-
-### `save_output`
-- `true` → in den normalen ComfyUI-Output-Ordner speichern
-- `false` → temporäre Ausgabe
-
-Für den normalen Einsatz sollte `true` verwendet werden.
-
-### `audio`
-GIF unterstützt in diesem Workflow keinen Ton. Der Audio-Eingang bleibt daher unverbunden.
-
-### `meta_batch` / `vae`
-Erweiterte VideoHelperSuite-Eingänge. Für den normalen GIF-Workflow werden sie nicht benötigt.
 
 ---
 
 ## Kein Text gewünscht?
 
-Wenn kein Text benötigt wird, kann der komplette Text-/Blink-Pfad umgangen werden.
-
-Statt:
+Im Multi-Text Designer einfach:
 
 ```text
-Prepare images
-   → Add Label
-   → Get Images From Batch Indexed
-   → Insert Images To Batch Indexed
-   → Save GIF
+Enable text overlay = off
 ```
 
-kann direkt verbunden werden:
+Alle drei Layer werden damit auf einmal abgeschaltet und die Frames unverändert weitergereicht.
 
-```text
-Prepare images
-   → Save GIF
-```
+---
 
-Die Preset-, Resize-, Ratio-, FPS- und Dauerfunktionen bleiben dadurch vollständig erhalten.
+## Tipps für kleine GIFs
 
-## Empfehlungen für kleine GIF-Dateien
-
-Wenn das GIF zu groß wird, in dieser Reihenfolge reduzieren:
+Wenn das GIF zu groß wird, zuerst reduzieren:
 
 1. Dauer
 2. lange Bildseite
 3. FPS
-4. Motivkomplexität ist nicht direkt steuerbar, beeinflusst GIF-Größe aber stark
 
-Typischer Ausgangspunkt für Chat-GIFs:
+Praktischer Ausgangspunkt:
 
 ```text
 4–5 Sekunden
@@ -653,102 +397,75 @@ Typischer Ausgangspunkt für Chat-GIFs:
 6–8 FPS
 ```
 
+---
+
 ## Troubleshooting
 
-### GIF ist größer als erwartet
+### Designer zeigt vor dem ersten Run nur eine schwarze Fläche
+Normal. Einmal **Run** starten, damit ein echter Preview-Frame geladen wird.
 
-Das ist bei stark bewegten, verrauschten oder detailreichen Videos normal. `Small` testen oder in `Custom` Dauer, Pixelgröße und FPS weiter reduzieren.
+### Text lässt sich nicht ziehen
+Prüfen:
+- `Enable text overlay` ist an
+- ausgewählter Layer ist aktiviert
+- Layer enthält Text
 
-### Mein 16:9-/1:1-/9:16-Video wird falsch zugeschnitten
+### Zweiter oder dritter Text erscheint nicht
+Layer 2 / 3 auswählen und `Enable selected layer` aktivieren.
 
-`aspect_ratio` auf:
+### GIF wird nicht final gespeichert
+Das ist im Preview-Modus absichtlich so. Bei `4B` **✓ APPROVE & EXPORT FINAL GIF** drücken.
 
-```text
-Auto (Input Image)
-```
+### GIF ist zu groß
+`Small` testen oder bei `Custom` Dauer, Auflösung und FPS reduzieren.
 
-stellen.
-
-Ein fest ausgewähltes Ratio erzwingt bewusst einen Center Crop.
-
-### Mein Video ist sehr groß / 2K / 4K
-
-Der öffentliche Beispielworkflow verwendet `custom_width = 0`, damit der Upload-Loader neutral und versionsrobust startet. Bei sehr großen 2K-/4K-Videos kannst du optional `custom_width = 512` setzen; die endgültige GIF-Größe wird trotzdem in `GIF Preset / Prepare` festgelegt.
-
-### Sehr langes Video
-
-`frame_load_cap = 144` begrenzt bei 12 FPS die geladene Länge auf ungefähr 12 Sekunden.
+### Seitenverhältnis ist falsch
+`aspect_ratio = Auto (Input Image)` verwenden.
 
 ### Missing Nodes
-
-Prüfen, ob installiert sind:
-
+Benötigt werden:
 - ComfyUI-VideoHelperSuite
-- ComfyUI-KJNodes
 - ComfyUI-GIFToolkit
 
-Nach Installation ComfyUI vollständig neu starten.
-
-### Deutsch/English-Umschalter fehlt
-
-Prüfen, ob der Ordner
-
-```text
-web/js/gif_toolkit_help.js
-```
-
-im installierten Repository vorhanden ist und ComfyUI nach der Installation vollständig neu gestartet wurde.
+KJNodes wird für den aktuellen Workflow nicht benötigt.
 
 ---
 
 # English
 
-## What does this project do?
+## Overview
 
-`ComfyUI-GIFToolkit` adds small helper nodes and a ready-to-use example workflow for converting short videos into compact looping GIFs directly in ComfyUI.
+`ComfyUI-GIFToolkit` adds custom helper nodes and a ready-to-use workflow for short looping GIFs.
 
-The included workflow handles:
+The current workflow:
 
-1. loading and pre-scaling the video
-2. preset, aspect ratio, FPS and duration
-3. optional text overlay with an automatic blink schedule
-4. saving the final animation as a GIF
+1. loads video through **VideoHelperSuite**
+2. controls target size, aspect ratio, FPS and duration
+3. supports up to **3 independent text layers**
+4. previews the text and GIF before permanent output
+5. writes the final GIF only after explicit approval
 
-The workflow also contains a **Deutsch/English help node** directly on the ComfyUI canvas.
-
-## Included custom nodes
-
-| Node | Purpose |
-|---|---|
-| `GIF Toolkit Guide / Hilfe (DE-EN)` | bilingual help directly on the ComfyUI canvas |
-| `GIF Preset / Prepare` | presets, aspect ratio, FPS, duration, resize and blink schedule |
-| `GIF Prepare / Blink Schedule` | backward-compatible helper from v2 |
-
-The example workflow also uses nodes from **ComfyUI-VideoHelperSuite** and **ComfyUI-KJNodes**.
+The text designer is visual: text can be clicked directly on the preview frame and dragged with the mouse.
 
 ## Requirements
 
 - ComfyUI
 - [ComfyUI-VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite)
-- [ComfyUI-KJNodes](https://github.com/kijai/ComfyUI-KJNodes)
 - this repository: `ComfyUI-GIFToolkit`
 
-`ComfyUI-GIFToolkit` currently has **no additional pip dependencies**.
+**KJNodes is no longer required by the current workflow.**
 
-### Third-party dependencies
+`ComfyUI-GIFToolkit` currently has no additional pip dependencies.
 
-The example workflow uses nodes from these independent projects:
+### Third-party dependency
 
-- [ComfyUI-VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite) by Kosinkadink
-- [ComfyUI-KJNodes](https://github.com/kijai/ComfyUI-KJNodes) by kijai
+The example workflow uses nodes from **ComfyUI-VideoHelperSuite** by Kosinkadink.
 
-These projects are **not bundled** with this repository. Install them separately from their respective upstream repositories or through ComfyUI Manager.
-
-At the time of this documentation, both upstream repositories declare **GPL-3.0**. Their copyrights and license terms remain with their respective authors. `ComfyUI-GIFToolkit` does not copy their source code; the included workflow only references their node types.
+VideoHelperSuite is **not bundled** with this repository. Install it separately from its upstream repository or through ComfyUI Manager. Its copyright and license terms remain with the upstream project.
 
 ## Installation
 
-### Option A — Git
+### Git
 
 From `ComfyUI/custom_nodes`:
 
@@ -757,316 +474,264 @@ cd ComfyUI/custom_nodes
 git clone https://github.com/oekobudde/ComfyUI-GIFToolkit.git
 ```
 
-Then **fully restart ComfyUI**.
+Fully restart ComfyUI afterwards.
 
-> The final GitHub URL will be added before the public release.
+### ZIP
 
-### Option B — ZIP
-
-1. Download the repository as a ZIP.
+1. Download the repository ZIP.
 2. Extract it.
-3. Place the folder at
-   `ComfyUI/custom_nodes/ComfyUI-GIFToolkit`.
+3. Place it at `ComfyUI/custom_nodes/ComfyUI-GIFToolkit`.
 4. Fully restart ComfyUI.
 
-### Installing dependencies
-
-If VideoHelperSuite or KJNodes are missing, install them through ComfyUI Manager or manually.
-
-Manual installation:
-
-```bash
-cd ComfyUI/custom_nodes
-git clone https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git
-git clone https://github.com/kijai/ComfyUI-KJNodes.git
-```
-
-Restart ComfyUI afterwards.
-
-### Future ComfyUI Manager / Registry installation
-
-After the project is publicly published to the ComfyUI Registry, it is intended to be directly installable from ComfyUI Manager. Until then, use Git or ZIP installation.
-
 ## Load the workflow
-
-The ready-to-use workflow is located at:
 
 ```text
 workflows/ComfyUI_GIF_Maker.json
 ```
 
-Main workflow sections:
+Main sections:
 
 ```text
 1 → LOAD VIDEO
-        ↓
-2 → PRESET / PREPARE
-        ↓
-3 → TEXT / BLINK
-        ↓
-4 → SAVE GIF
+      ↓
+2 → PREPARE
+      ↓
+3 → MULTI-TEXT DESIGNER + BLINK
+      ↓
+4 → TEMP PREVIEW → APPROVE → FINAL EXPORT
 ```
 
 ## Quick start
 
 1. Select a short video in `1 → LOAD VIDEO`.
-2. Start with `Small` or `Balanced` in `2 → PRESET / PREPARE`.
-3. Keep `aspect_ratio = Auto (Input Image)` to preserve the source aspect ratio.
-4. Optionally configure text, position, font size and color in `Add Label`.
-5. Queue the workflow.
-6. `VHS Video Combine` writes the final GIF.
+2. Start with `Balanced` in `2 → PREPARE`.
+3. Keep `aspect_ratio = Auto (Input Image)` to preserve the source ratio.
+4. Run the workflow once.
+5. Place and style text in **GIF Multi-Text Designer**.
+6. Review the temporary GIF at `4A`.
+7. When satisfied, click **✓ APPROVE & EXPORT FINAL GIF**.
+
+A normal Run does **not** permanently write the final GIF.
 
 ## Presets
 
-| Preset | Long side | FPS | maximum duration | Recommended use |
+| Preset | Long side | FPS | max duration | Use |
 |---|---:|---:|---:|---|
 | `Small` | 288 px | 6 | 4.0 s | small chat GIF |
 | `Balanced` | 320 px | 8 | 5.0 s | good default |
-| `Quality` | 384 px | 10 | 5.5 s | higher quality, larger file |
+| `Quality` | 384 px | 10 | 5.5 s | higher quality |
 | `Custom` | custom | custom | custom | manual control |
 
-> Final GIF size depends strongly on motion, image noise, color changes and scene detail. A specific MB target therefore cannot be guaranteed.
+---
+
+## Field reference — English
+
+### 0 · GIF Toolkit Guide / Help
+
+#### `language`
+Switches the on-canvas guide between `Deutsch` and `English`.
 
 ---
 
-# Field reference — English
+### 1 · VHS Load Video
 
-## 0 · GIF Toolkit Guide / Hilfe (DE-EN)
+Provided by **ComfyUI-VideoHelperSuite**.
 
-### `language`
-Switches the on-canvas help node between `Deutsch` and `English`.
+Important fields:
 
-The guide is UI-only and does not change the generated GIF.
-
----
-
-## 1 · VHS Load Video
-
-This node comes from **ComfyUI-VideoHelperSuite** and loads the source video as an image sequence.
-
-### `video`
-The input video file.
-
-### `force_rate`
-Forces a specific frame rate while loading.
-
-Example workflow value:
-
-```text
-12 FPS
-```
-
-A 24/30 FPS source is already reduced to a smaller GIF-friendly rate, saving memory and processing time.
-
-### `custom_width`
-Target width while loading.
-
-Example workflow value:
-
-```text
-0
-```
-
-This keeps the loader neutral by default. The final GIF target size is controlled later by `GIF Preset / Prepare`.
-
-Optionally set this to e.g. `512` to reduce very large source videos while loading.
-
-This reduces large 2K/4K input videos early in the pipeline.
-
-### `custom_height`
-Target height while loading.
-
-Example workflow value:
-
-```text
-0
-```
-
-`0` disables a fixed height. With `custom_width = 512`, the original aspect ratio is preserved.
-
-If both width and height are set, VideoHelperSuite can crop to fit the specified dimensions.
-
-### `frame_load_cap`
-Maximum number of frames to load.
-
-Example workflow value:
-
-```text
-144
-```
-
-At `force_rate = 12`, this is approximately 12 seconds of input.
-
-`0` means no frame limit in VideoHelperSuite.
-
-### `skip_first_frames`
-Skips frames at the beginning after the forced frame rate is applied.
-
-Example:
-
-```text
-24
-```
-
-at 12 FPS skips roughly the first 2 seconds.
-
-The example workflow uses `0`.
-
-### `select_every_nth`
-Keeps only every n-th frame.
-
-- `1` = keep every frame
-- `2` = every second frame
-- `3` = every third frame
-
-The example workflow normally keeps this at `1`, because the Prepare node later controls the final GIF FPS.
-
-### `format`
-Optional VideoHelperSuite load format. The example workflow uses `None`.
-
-Usually no change is required for this GIF workflow.
-
-### `choose video to upload`
-VideoHelperSuite upload button for copying a local video into the ComfyUI input folder.
-
-### `videopreview`
-UI preview of the selected input video. It does not itself modify the output frames.
-
-### important outputs
-
-| Output | Meaning |
-|---|---|
-| `IMAGE` | loaded video frames |
-| `frame_count` | number of loaded frames |
-| `audio` | audio track if present |
-| `video_info` | metadata such as loaded/source FPS |
+- `video` – input video
+- `force_rate` – load FPS, default 12
+- `custom_width / custom_height` – default 0 / 0
+- `frame_load_cap` – default 144
+- `skip_first_frames`
+- `select_every_nth`
 
 ---
 
-## 2 · GIF Preset / Prepare
+### 2 · GIF Prepare / Preset
 
-This is the central node of this project.
+Controls:
 
-It handles:
-
-- preset selection
+- preset
+- aspect ratio
 - target size
-- target FPS
-- maximum GIF duration
-- aspect ratio / centered crop
-- dynamic blink schedule
+- FPS
+- maximum duration
 
-### `preset`
-Available values:
+`Auto (Input Image)` preserves the source aspect ratio. A fixed ratio performs a centered crop.
 
-- `Small`
-- `Balanced`
-- `Quality`
-- `Custom`
+---
 
-The three built-in presets automatically define size, FPS and duration.
+### 3A · GIF Multi-Text Designer
 
-The three `custom_*` fields are only used when `Custom` is selected.
+The central text UI.
 
-### `aspect_ratio`
-Available values:
+#### `Enable text overlay`
+Global master switch.
 
-- `Auto (Input Image)`
-- `1:1`
-- `16:9`
-- `9:16`
-- `4:3`
-- `3:4`
+- on → enabled text layers are rendered
+- off → no text is rendered and frames pass through unchanged
 
-#### `Auto (Input Image)`
-Preserves the source aspect ratio.
+No manual node bypass is required.
 
-Examples:
+### Text layers
 
-- 1:1 stays 1:1
-- 16:9 stays 16:9
-- 9:16 stays 9:16
-- unusual source ratios are preserved as well
+The current version supports exactly **3 layers**.
 
-#### forced aspect ratio
-Selecting a fixed ratio such as `1:1` or `9:16` performs a **center crop** until the target ratio is reached.
+Every layer has independent:
 
-The image is not simply stretched.
+- enable state
+- text
+- font
+- font size
+- font color
+- X/Y position
+- background
+- background color / opacity
+- padding
+- corner radius
+- outline / outline color / width
+- shadow / shadow color / X/Y
+- line spacing
 
-### `custom_long_side`
-Used only when `preset = Custom`.
-
-Sets the pixel size of the **longer side**.
-
-Node range:
+#### Layer selection
+Use:
 
 ```text
-128–512 px
+Layer 1   Layer 2   Layer 3
 ```
 
-Examples:
+The gold-highlighted layer is selected.
 
-- 16:9 + `320` → approximately 320 × 180
-- 9:16 + `320` → approximately 180 × 320
-- 1:1 + `320` → 320 × 320
+Clicking a visible text directly on the preview also selects its layer.
 
-The helper rounds to even output dimensions.
+#### Dragging
+Drag the selected text directly on the image.
 
-### `custom_fps`
-Used only when `preset = Custom`.
+Positions are stored as relative percentages, so they remain meaningful across output sizes.
 
-Sets the GIF frame rate.
+#### `Enable selected layer`
+Enables or disables only the selected layer.
 
-Range:
+#### `Duplicate → next`
+Copies the active layer into the next slot and offsets it slightly.
+
+#### `Clear selected`
+Clears and disables only the selected layer.
+
+#### 3×3 position grid
+Quick placement shortcuts:
 
 ```text
-2–12 FPS
+↖   ↑   ↗
+←   •   →
+↙   ↓   ↘
 ```
 
-Lower FPS usually produces significantly smaller GIF files.
+#### Background / Outline / Shadow
+Each layer has independent styling.
 
-### `custom_duration_seconds`
-Used only when `preset = Custom`.
+#### Advanced style
+Contains:
 
-Maximum GIF duration.
+- outline width
+- padding
+- corner radius
+- background opacity
+- shadow X/Y
+- line spacing
 
-Range:
+The node automatically fits its height when Advanced style opens or closes.
+
+#### Preview frame
+Selects the frame shown in the designer.
+
+`Refresh frame` queues a preview run without permanently writing the final GIF.
+
+---
+
+### 3B · GIF Text Overlay
+
+Applies all enabled layers to the full frame batch.
+
+#### `blink_enabled`
+- on → all active layers blink together
+- off → all active layers remain continuously visible
+
+#### `blink_on_seconds` / `blink_off_seconds`
+Shared blink rhythm.
+
+> Per-layer blink timing is not included yet.
+
+---
+
+### 4A · TEMP GIF PREVIEW
+
+Uses VHS Video Combine with `save_output = false`.
+
+A normal Run creates only a temporary GIF for review.
+
+---
+
+### 4B · GIF Export Gate
+
+Blocks permanent output by default.
+
+When satisfied, click:
+
+**✓ APPROVE & EXPORT FINAL GIF**
+
+It performs one export run, then returns to preview mode.
+
+---
+
+### 4C · FINAL GIF
+
+The final VHS Video Combine writes to:
 
 ```text
-0.5–12.0 seconds
+ComfyUI/output/GIFToolkit
 ```
 
-If the source video is shorter, only the available duration is used.
+only after approval.
 
-### `blink_on_seconds`
-How long the text remains visible during each blink cycle.
+---
 
-Default:
+## No text?
+
+Turn off:
 
 ```text
-0.5 s
+Enable text overlay
 ```
 
-### `blink_off_seconds`
-How long the text remains hidden during each blink cycle.
+All three layers are bypassed at once and frames pass through unchanged.
 
-Default:
+---
 
-```text
-0.5 s
-```
+## Troubleshooting
 
-Example:
+### Designer is blank before the first Run
+Expected. Run once to load the preview frame.
 
-```text
-blink_on_seconds  = 0.4
-blink_off_seconds = 0.2
-```
+### Text cannot be dragged
+Check that:
+- `Enable text overlay` is on
+- the selected layer is enabled
+- the layer contains text
 
-creates a faster blink where the text is visible longer than it is hidden.
+### Layer 2 or 3 does not appear
+Select it and enable `Enable selected layer`.
 
-### outputs
+### Final GIF is not saved
+This is intentional in Preview mode. Click **✓ APPROVE & EXPORT FINAL GIF**.
 
-| Output | Meaning |
-|---|---|
-| `images` | sampled and resized output frames |
+### GIF is too large
+Reduce duration, long-side size, or FPS.
+
+### Missing Nodes
+Required:
+- ComfyUI-VideoHelperSuite
+- ComfyUI-GIFToolkit
+
+KJNodes is not required by the current workflow.
