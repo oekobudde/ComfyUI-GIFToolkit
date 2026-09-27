@@ -635,8 +635,14 @@ class GIFToolkitExportGate:
 
     def gate(self, images, export_enabled=False):
         if not export_enabled:
-            return (ExecutionBlocker(None),)
-        return (images,)
+            return {
+                "ui": {"gif_toolkit_export_gate": [{"state": "preview"}]},
+                "result": (ExecutionBlocker(None),),
+            }
+        return {
+            "ui": {"gif_toolkit_export_gate": [{"state": "export"}]},
+            "result": (images,),
+        }
 
 
 class GIFToolkitTextStyle:
