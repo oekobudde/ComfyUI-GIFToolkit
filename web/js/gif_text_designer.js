@@ -88,11 +88,20 @@ function designerUI(node) {
   };
   top.appendChild(refresh);
 
+  const canvasWrap = document.createElement("div");
+  canvasWrap.style.cssText = "display:flex;justify-content:center;align-items:center;width:100%;min-height:180px;overflow:hidden";
+  root.appendChild(canvasWrap);
+
   const canvas = document.createElement("canvas");
-  canvas.width = 500; canvas.height = 360;
-  canvas.style.cssText = "width:100%;max-height:470px;background:#090909;border:1px solid #5d4a25;border-radius:6px;cursor:grab;touch-action:none";
-  root.appendChild(canvas);
+  canvas.width = 320; canvas.height = 320;
+  canvas.style.cssText = "display:block;background:#090909;border:1px solid #5d4a25;border-radius:6px;cursor:grab;touch-action:none";
+  canvasWrap.appendChild(canvas);
   const ctx = canvas.getContext("2d");
+
+  const resolution = document.createElement("div");
+  resolution.textContent = "Frame: waiting for preview";
+  resolution.style.cssText = "text-align:center;opacity:.78;font-size:11px";
+  root.appendChild(resolution);
 
   const hint = document.createElement("div");
   hint.textContent = "Drag the text directly on the image. Changes are stored as relative X/Y positions.";
@@ -172,8 +181,13 @@ function designerUI(node) {
 
   const advanced = document.createElement("details");
   advanced.innerHTML = "<summary>Advanced style</summary>";
-  advanced.style.cssText="background:#211b12;border-radius:5px;padding:5px";
+  advanced.style.cssText="background:#211b12;border:1px solid #5d4a25;border-radius:5px;padding:6px;box-sizing:border-box;width:100%";
   root.appendChild(advanced);
+  advanced.addEventListener("toggle", () => {
+    const targetH = advanced.open ? 1080 : 900;
+    node.setSize?.([580, targetH]);
+    node.setDirtyCanvas?.(true, true);
+  });
 
   const grid=document.createElement("div");
   grid.style.cssText="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:6px";
@@ -203,10 +217,15 @@ function designerUI(node) {
 
   function resizeCanvasForImage() {
     if (!bg) return;
-    const maxW = 500, maxH = 470;
-    const scale = Math.min(maxW/bg.naturalWidth, maxH/bg.naturalHeight, 1.5);
-    canvas.width = Math.max(220, Math.round(bg.naturalWidth*scale));
-    canvas.height = Math.max(180, Math.round(bg.naturalHeight*scale));
+    const srcW = bg.naturalWidth || 320;
+    const srcH = bg.naturalHeight || 320;
+    const maxW = 500, maxH = 560;
+    const scale = Math.min(1, maxW / srcW, maxH / srcH);
+    canvas.width = Math.max(1, Math.round(srcW * scale));
+    canvas.height = Math.max(1, Math.round(srcH * scale));
+    canvas.style.width = canvas.width + "px";
+    canvas.style.height = canvas.height + "px";
+    resolution.textContent = "Frame: " + srcW + " × " + srcH + (scale < 1 ? " · preview scaled to fit" : " · 1:1 preview");
   }
 
   function currentStyle() {
@@ -244,11 +263,8 @@ function designerUI(node) {
     ctx.fillStyle="#090909"; ctx.fillRect(0,0,canvas.width,canvas.height);
 
     if(bg){
-      const scale=Math.min(canvas.width/bg.naturalWidth,canvas.height/bg.naturalHeight);
-      const w=bg.naturalWidth*scale, h=bg.naturalHeight*scale;
-      const x=(canvas.width-w)/2, y=(canvas.height-h)/2;
-      imageRect={x,y,w,h};
-      ctx.drawImage(bg,x,y,w,h);
+      imageRect={x:0,y:0,w:canvas.width,h:canvas.height};
+      ctx.drawImage(bg,0,0,canvas.width,canvas.height);
     } else {
       imageRect={x:0,y:0,w:canvas.width,h:canvas.height};
       ctx.fillStyle="#777"; ctx.textAlign="center"; ctx.font="14px sans-serif";
@@ -331,7 +347,16 @@ function designerUI(node) {
 
   node._gifDesignerSetBackground = (entry)=>{
     const img=new Image();
-    img.onload=()=>{bg=img;resizeCanvasForImage();draw();};
+    img.onload=()=>{
+      bg=img;
+      resizeCanvasForImage();
+      draw();
+      requestAnimationFrame(() => {
+        const needed = Math.max(880, Math.ceil(root.scrollHeight + 120));
+        node.setSize?.([580, needed]);
+        node.setDirtyCanvas?.(true, true);
+      });
+    };
     img.onerror=()=>{bg=null;draw();};
     img.src=viewUrl(entry);
   };
@@ -344,15 +369,15 @@ function exportGateUI(node){
   const root=document.createElement("div");
   root.style.cssText="padding:10px;background:#102016;color:#eaffef;border:1px solid #39734a;border-radius:6px;font:12px system-ui,sans-serif";
   const status=document.createElement("div");
-  status.textContent="PREVIEW MODE · permanent GIF saving is blocked";
-  status.style.cssText="margin-bottom:8px;font-weight:700";
+  status.textContent="PREVIEW MODE · nothing permanent has been saved";
+  status.style.cssText="margin-bottom:8px;font-weight:800;font-size:13px;color:#bfffd0";
   root.appendChild(status);
   const btn=document.createElement("button");
-  btn.textContent="EXPORT GIF NOW";
+  btn.textContent="✓ APPROVE & EXPORT FINAL GIF";
   btn.style.cssText="width:100%;padding:9px;font-weight:800;background:#2e8b57;color:white;border:0;border-radius:5px;cursor:pointer";
   root.appendChild(btn);
   const note=document.createElement("div");
-  note.textContent="Normal Run = preview only. This button arms one export run.";
+  note.textContent="Normal Run = temporary preview only. Click the green button when the GIF looks right.";
   note.style.cssText="margin-top:7px;opacity:.75";
   root.appendChild(note);
 
@@ -398,7 +423,7 @@ app.registerExtension({
         for(const n of names) hideWidget(widget(this,n));
         const ui=designerUI(this);
         this.addDOMWidget("designer","gif_text_designer",ui,{serialize:false,hideOnZoom:false});
-        this.setSize([560,760]);
+        this.setSize([580,900]);
         return r;
       };
       const oldExec=nodeType.prototype.onExecuted;
@@ -416,7 +441,7 @@ app.registerExtension({
         hideWidget(widget(this,"export_enabled"));
         const ui=exportGateUI(this);
         this.addDOMWidget("export_controls","gif_export_gate",ui,{serialize:false,hideOnZoom:false});
-        this.setSize([330,160]);
+        this.setSize([370,185]);
         return r;
       };
       const oldExec=nodeType.prototype.onExecuted;
