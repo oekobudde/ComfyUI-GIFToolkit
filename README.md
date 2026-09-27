@@ -173,8 +173,12 @@ Zielbreite bereits beim Laden.
 Im Beispielworkflow:
 
 ```text
-512
+0
 ```
+
+Damit bleibt der Loader zunächst neutral. Die eigentliche GIF-Zielgröße wird später in `GIF Preset / Prepare` festgelegt.
+
+Optional kann hier z. B. `512` gesetzt werden, um sehr große Eingabevideos bereits beim Laden zu verkleinern.
 
 Große 2K-/4K-Videos werden dadurch früh verkleinert.
 
@@ -626,7 +630,7 @@ Ein fest ausgewähltes Ratio erzwingt bewusst einen Center Crop.
 
 ### Mein Video ist sehr groß / 2K / 4K
 
-Der Loader ist im Beispiel bereits auf `custom_width = 512` gesetzt. Dadurch wird das Material schon beim Laden verkleinert.
+Der öffentliche Beispielworkflow verwendet `custom_width = 0`, damit der Upload-Loader neutral und versionsrobust startet. Bei sehr großen 2K-/4K-Videos kannst du optional `custom_width = 512` setzen; die endgültige GIF-Größe wird trotzdem in `GIF Preset / Prepare` festgelegt.
 
 ### Sehr langes Video
 
@@ -817,8 +821,12 @@ Target width while loading.
 Example workflow value:
 
 ```text
-512
+0
 ```
+
+This keeps the loader neutral by default. The final GIF target size is controlled later by `GIF Preset / Prepare`.
+
+Optionally set this to e.g. `512` to reduce very large source videos while loading.
 
 This reduces large 2K/4K input videos early in the pipeline.
 
