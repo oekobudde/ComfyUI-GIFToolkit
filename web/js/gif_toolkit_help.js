@@ -6,12 +6,12 @@ const HELP = {
     <div class="wg-sub">Kurzanleitung · nach Workflow-Node getrennt</div>
 
     <section><div class="wg-head"><span>1</span> → LOAD VIDEO</div>
-      <div><b>Node:</b> VHS Load Video</div>
+      <div><b>Node:</b> VHS Load Video (Upload)</div>
       <div>• force_rate: <b>12 FPS</b></div>
-      <div>• custom_width: <b>512</b></div>
+      <div>• custom_width: <b>0</b> → Originalbreite zunächst beibehalten</div>
       <div>• custom_height: <b>0</b> → Original-Seitenverhältnis</div>
       <div>• frame_load_cap: <b>144</b> → ca. 12 s bei 12 FPS</div>
-      <div class="wg-tip">Große 2K/4K-Videos werden schon beim Laden verkleinert.</div>
+      <div class="wg-tip">Optional kannst du custom_width später z. B. auf 512 setzen. Standardmäßig bleibt der Loader neutral; die GIF Preset / Prepare-Node übernimmt die eigentliche Zielgröße.</div>
     </section>
 
     <div class="wg-arrow">↓</div>
@@ -49,12 +49,12 @@ const HELP = {
     <div class="wg-sub">Quick guide · separated by workflow node</div>
 
     <section><div class="wg-head"><span>1</span> → LOAD VIDEO</div>
-      <div><b>Node:</b> VHS Load Video</div>
+      <div><b>Node:</b> VHS Load Video (Upload)</div>
       <div>• force_rate: <b>12 FPS</b></div>
-      <div>• custom_width: <b>512</b></div>
+      <div>• custom_width: <b>0</b> → keep source width initially</div>
       <div>• custom_height: <b>0</b> → preserve source aspect</div>
       <div>• frame_load_cap: <b>144</b> → about 12 s at 12 FPS</div>
-      <div class="wg-tip">Large 2K/4K videos are reduced while loading.</div>
+      <div class="wg-tip">Optionally set custom_width to e.g. 512 later. The default loader stays neutral; GIF Preset / Prepare controls the final GIF size.</div>
     </section>
 
     <div class="wg-arrow">↓</div>
