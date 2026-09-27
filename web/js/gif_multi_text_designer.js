@@ -106,11 +106,10 @@ function writeLayers(node, layers) {
 }
 
 function parseFonts(node) {
-  try {
-    const p = JSON.parse(String(widget(node,"font_catalog_json")?.value || "[]"));
-    if (Array.isArray(p) && p.length) return p;
-  } catch {}
-  return ["PIL Default"];
+  const w = widget(node,"font_catalog");
+  const values = w?.options?.values;
+  if (Array.isArray(values) && values.length) return values;
+  return [String(w?.value || "PIL Default")];
 }
 
 function multiDesignerUI(node) {
@@ -534,7 +533,7 @@ app.registerExtension({
     const original=nodeType.prototype.onNodeCreated;
     nodeType.prototype.onNodeCreated=function(){
       const r=original?.apply(this,arguments);
-      for(const name of ["enabled","layers_json","active_layer","font_catalog_json","preview_frame"]) hideWidget(widget(this,name));
+      for(const name of ["enabled","layers_json","active_layer","font_catalog","preview_frame"]) hideWidget(widget(this,name));
       const ui=multiDesignerUI(this);
       this.addDOMWidget("multi_designer","gif_multi_text_designer",ui,{serialize:false,hideOnZoom:false});
       this.setSize([600,820]);
