@@ -5,6 +5,27 @@ Create compact looping GIFs from short videos directly in ComfyUI — with prese
 **Deutsch:** [Direkt zum deutschen Teil](#deutsch) · **English:** [Jump to English](#english)
 
 
+> **v0.2 development preview:** The branch `feature/text-overlay-v0.2` replaces the example workflow's KJNodes text path with native GIF Toolkit nodes. The current v0.2 test workflow only requires **ComfyUI-VideoHelperSuite** plus this repository.
+
+### v0.2 text workflow / Text-Workflow
+
+```text
+Load Video
+   ↓
+GIF Prepare / Preset
+   ├──→ GIF Text Preview → Preview Image
+   ↓
+GIF Text Style ─────────→ GIF Text Overlay
+                           ↓
+                       Save GIF
+```
+
+**Deutsch:** `GIF Text Style` verwendet verständliche Positionen wie `Top Center`, `Center` oder `Bottom Right`. `margin_x` und `margin_y` sind nur noch Randabstände. Mit `enabled = false` kann Text ohne Umverkabeln komplett abgeschaltet werden. `GIF Text Overlay` übernimmt auch das Blinken.
+
+**English:** `GIF Text Style` uses human-friendly anchors such as `Top Center`, `Center` or `Bottom Right`. `margin_x` and `margin_y` are only edge margins. Set `enabled = false` to disable text without rewiring. `GIF Text Overlay` also handles blinking.
+
+> The detailed v0.1/KJNodes parameter reference further down is retained temporarily during this development branch and will be replaced before the v0.2 merge.
+
 > **Status:** Development / pre-release. The workflow and custom nodes are already usable, but the package has not yet been published to the ComfyUI Registry.
 
 ---
