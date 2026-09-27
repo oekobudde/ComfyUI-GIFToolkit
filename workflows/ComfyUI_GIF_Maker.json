@@ -212,14 +212,14 @@
     },
     {
       "id": 9,
-      "type": "GIFToolkitTextDesigner",
+      "type": "GIFToolkitMultiTextDesigner",
       "pos": [
         849.282152858411,
         77.37313025066592
       ],
       "size": [
-        580,
-        720
+        600,
+        820
       ],
       "flags": {},
       "order": 3,
@@ -245,54 +245,22 @@
           "links": null
         }
       ],
-      "title": "3A → VISUAL TEXT DESIGNER · drag text on image",
+      "title": "3A → MULTI-TEXT DESIGNER · up to 3 layers",
       "properties": {
-        "Node name for S&R": "GIFToolkitTextDesigner"
+        "Node name for S&R": "GIFToolkitMultiTextDesigner"
       },
       "widgets_values": [
         true,
-        "LET'S GO!",
+        "[{\"enabled\":true,\"text\":\"LET'S GO!\",\"font\":\"PIL Default\",\"font_size\":16,\"font_color\":\"#40e704\",\"x_percent\":45.2,\"y_percent\":5.6,\"background_enabled\":false,\"background_color\":\"#000000\",\"background_opacity\":160,\"padding\":8,\"corner_radius\":8,\"outline_enabled\":true,\"outline_color\":\"#000000\",\"outline_width\":2,\"shadow_enabled\":true,\"shadow_color\":\"#000000\",\"shadow_offset_x\":2,\"shadow_offset_y\":2,\"line_spacing\":4},{\"enabled\":false,\"text\":\"\",\"font\":\"PIL Default\",\"font_size\":20,\"font_color\":\"#ffffff\",\"x_percent\":15,\"y_percent\":85,\"background_enabled\":false,\"background_color\":\"#000000\",\"background_opacity\":160,\"padding\":8,\"corner_radius\":8,\"outline_enabled\":true,\"outline_color\":\"#000000\",\"outline_width\":2,\"shadow_enabled\":false,\"shadow_color\":\"#000000\",\"shadow_offset_x\":2,\"shadow_offset_y\":2,\"line_spacing\":4},{\"enabled\":false,\"text\":\"\",\"font\":\"PIL Default\",\"font_size\":20,\"font_color\":\"#ffffff\",\"x_percent\":85,\"y_percent\":85,\"background_enabled\":false,\"background_color\":\"#000000\",\"background_opacity\":160,\"padding\":8,\"corner_radius\":8,\"outline_enabled\":true,\"outline_color\":\"#000000\",\"outline_width\":2,\"shadow_enabled\":false,\"shadow_color\":\"#000000\",\"shadow_offset_x\":2,\"shadow_offset_y\":2,\"line_spacing\":4}]",
+        0,
         "PIL Default",
-        16,
-        "#40e704",
-        45.2,
-        5.6,
-        false,
-        "#000000",
-        160,
-        8,
-        8,
-        true,
-        "#000000",
-        2,
-        false,
-        "#000000",
-        2,
-        2,
-        4,
         0
       ],
       "widgets_values_named": {
         "enabled": true,
-        "text": "LET'S GO!",
-        "font": "PIL Default",
-        "font_size": 16,
-        "font_color": "#40e704",
-        "x_percent": 45.2,
-        "y_percent": 5.6,
-        "background_enabled": false,
-        "background_color": "#000000",
-        "background_opacity": 160,
-        "padding": 8,
-        "corner_radius": 8,
-        "outline_enabled": true,
-        "outline_color": "#000000",
-        "outline_width": 2,
-        "shadow_enabled": false,
-        "shadow_color": "#000000",
-        "shadow_offset_x": 2,
-        "shadow_offset_y": 2,
-        "line_spacing": 4,
+        "layers_json": "[{\"enabled\":true,\"text\":\"LET'S GO!\",\"font\":\"PIL Default\",\"font_size\":16,\"font_color\":\"#40e704\",\"x_percent\":45.2,\"y_percent\":5.6,\"background_enabled\":false,\"background_color\":\"#000000\",\"background_opacity\":160,\"padding\":8,\"corner_radius\":8,\"outline_enabled\":true,\"outline_color\":\"#000000\",\"outline_width\":2,\"shadow_enabled\":true,\"shadow_color\":\"#000000\",\"shadow_offset_x\":2,\"shadow_offset_y\":2,\"line_spacing\":4},{\"enabled\":false,\"text\":\"\",\"font\":\"PIL Default\",\"font_size\":20,\"font_color\":\"#ffffff\",\"x_percent\":15,\"y_percent\":85,\"background_enabled\":false,\"background_color\":\"#000000\",\"background_opacity\":160,\"padding\":8,\"corner_radius\":8,\"outline_enabled\":true,\"outline_color\":\"#000000\",\"outline_width\":2,\"shadow_enabled\":false,\"shadow_color\":\"#000000\",\"shadow_offset_x\":2,\"shadow_offset_y\":2,\"line_spacing\":4},{\"enabled\":false,\"text\":\"\",\"font\":\"PIL Default\",\"font_size\":20,\"font_color\":\"#ffffff\",\"x_percent\":85,\"y_percent\":85,\"background_enabled\":false,\"background_color\":\"#000000\",\"background_opacity\":160,\"padding\":8,\"corner_radius\":8,\"outline_enabled\":true,\"outline_color\":\"#000000\",\"outline_width\":2,\"shadow_enabled\":false,\"shadow_color\":\"#000000\",\"shadow_offset_x\":2,\"shadow_offset_y\":2,\"line_spacing\":4}]",
+        "active_layer": 0,
+        "font_catalog": "PIL Default",
         "preview_frame": 0
       },
       "color": "#61491f",
@@ -682,12 +650,12 @@
     },
     {
       "id": 3,
-      "title": "3 → VISUAL TEXT DESIGNER + BLINK",
+      "title": "3 → MULTI-TEXT DESIGNER + BLINK",
       "bounding": [
         812.0142066798713,
         -24.098080732190425,
         1092.7846458575234,
-        900
+        940
       ],
       "color": "#8a6335",
       "flags": {}
