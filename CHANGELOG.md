@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.0-dev.1
+- Added `GIF Multi-Text Designer` with three independently styled and positioned text layers.
+- Added layer tabs, per-layer enable/disable, direct click-to-select, mouse dragging, `Duplicate → next`, and `Clear selected`.
+- Each layer has independent text, font, size, color, background, outline, shadow, and advanced style settings.
+- Retained a single global `Enable text overlay` switch that bypasses all text rendering without rewiring the workflow.
+- Extended `GIF Text Overlay` to render all enabled layers while keeping blink timing global.
+- Updated the bilingual on-canvas guide and README with the complete multi-text workflow and parameter reference.
+- KJNodes remains unnecessary for the current example workflow.
+
 ## 0.3.0-dev.1
 - Added `GIF Text Designer`, an inline visual canvas for positioning text by dragging it directly on the preview frame.
 - Added dynamic designer auto-sizing so Advanced Style expands/collapses without leaving large empty space.
