@@ -1,18 +1,51 @@
 # Parameter Reference / Feldreferenz
 
-This document is a compact companion to the main README. The README remains the primary user guide.
+The complete, maintained parameter reference now lives in the main [README](../README.md).
 
-**Deutsch:** siehe Abschnitt „Feldreferenz — Deutsch“ in [`README.md`](../README.md#feldreferenz--deutsch).  
-**English:** see “Field reference — English” in [`README.md`](../README.md#field-reference--english).
+## Deutsch
 
-The field reference covers:
+Dokumentiert sind:
 
-- GIF Toolkit Guide / Hilfe (DE-EN)
+- GIF Toolkit Guide / Hilfe
 - VHS Load Video
-- GIF Preset / Prepare
-- Add Label
-- Get Images From Batch Indexed
-- Insert Images To Batch Indexed
-- VHS Video Combine
+- GIF Prepare / Preset
+- GIF Multi-Text Designer
+  - globaler Master-Schalter
+  - Layer 1 / 2 / 3
+  - Layer-Auswahl per Button oder Klick auf den Text
+  - direkte Mauspositionierung
+  - eigener Stil pro Layer
+  - Duplicate → next
+  - Clear selected
+  - Advanced style
+- GIF Text Overlay
+  - globales Blinken für alle aktiven Layer
+- TEMP GIF PREVIEW
+- GIF Export Gate
+- FINAL GIF
 
-Keeping the detailed descriptions in one primary location avoids documentation drift while still providing a stable docs entry point for GitHub.
+Siehe: [Feldreferenz — Deutsch](../README.md#feldreferenz--deutsch)
+
+## English
+
+Documented sections:
+
+- GIF Toolkit Guide / Help
+- VHS Load Video
+- GIF Prepare / Preset
+- GIF Multi-Text Designer
+  - global master switch
+  - Layer 1 / 2 / 3
+  - select by button or by clicking text on the canvas
+  - direct mouse positioning
+  - independent style per layer
+  - Duplicate → next
+  - Clear selected
+  - Advanced style
+- GIF Text Overlay
+  - shared/global blink timing for all enabled layers
+- TEMP GIF PREVIEW
+- GIF Export Gate
+- FINAL GIF
+
+See: [Field reference — English](../README.md#field-reference--english)
