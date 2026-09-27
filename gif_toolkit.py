@@ -612,7 +612,7 @@ class GIFToolkitMultiTextDesigner:
                 "enabled": ("BOOLEAN", {"default": True}),
                 "layers_json": ("STRING", {"default": DEFAULT_TEXT_LAYERS_JSON, "multiline": True}),
                 "active_layer": ("INT", {"default": 0, "min": 0, "max": 2, "step": 1}),
-                "font_catalog_json": ("STRING", {"default": FONT_CATALOG_JSON, "multiline": True}),
+                "font_catalog": (FONT_CHOICES, {"default": DEFAULT_FONT}),
                 "preview_frame": ("INT", {"default": 0, "min": 0, "max": 9999, "step": 1}),
             },
             "hidden": {
@@ -637,7 +637,7 @@ class GIFToolkitMultiTextDesigner:
         enabled=True,
         layers_json=DEFAULT_TEXT_LAYERS_JSON,
         active_layer=0,
-        font_catalog_json=FONT_CATALOG_JSON,
+        font_catalog=DEFAULT_FONT,
         preview_frame=0,
         unique_id=None,
     ):
