@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.0-dev.1
+- Replaced the example workflow's KJNodes text path with native GIF Toolkit nodes.
+- Added `GIF Prepare / Preset` with video-only preparation responsibilities.
+- Added reusable `GIF Text Style` with anchor-based positioning instead of raw X/Y coordinates.
+- Added `GIF Text Preview` for single-frame positioning checks.
+- Added `GIF Text Overlay` with optional integrated blink timing.
+- Added outline, background-box and shadow text styling.
+- The v0.2 example workflow now requires only ComfyUI, VideoHelperSuite and ComfyUI-GIFToolkit.
+- Kept legacy helper/node IDs for compatibility with older development workflows.
+
 ## 0.1.0
 - Initial GitHub pre-release.
 - Added `GIF Preset / Prepare` with Small, Balanced, Quality and Custom presets.
