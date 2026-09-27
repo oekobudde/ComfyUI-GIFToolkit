@@ -26,6 +26,28 @@ GIF Text Style ─────────→ GIF Text Overlay
 
 > The detailed v0.1/KJNodes parameter reference further down is retained temporarily during this development branch and will be replaced before the v0.2 merge.
 
+> **v0.3 visual-designer preview:** The branch `feature/visual-designer-v0.3` adds an inline drag-and-drop text editor and a preview-first export workflow.
+
+### Visual designer / Visueller Designer
+
+```text
+Load Video
+   ↓
+GIF Prepare / Preset
+   ├────────────→ GIF Text Designer
+   │                    │
+   │                    └── style
+   ↓                         ↓
+GIF Text Overlay ─────→ TEMP GIF PREVIEW
+   │
+   └──→ GIF Export Gate ──→ Final GIF Saver
+          (blocked by default)
+```
+
+**Deutsch:** Nach einem normalen `Run` siehst du den Text direkt auf einer grafischen Arbeitsfläche und kannst ihn mit der Maus verschieben. Text, Font, Größe, Farbe, Hintergrund, Outline und Shadow lassen sich dort direkt ändern. Gleichzeitig wird nur ein **temporäres Preview-GIF** erzeugt. Erst `EXPORT GIF NOW` gibt den finalen Saver für genau einen Exportlauf frei.
+
+**English:** After a normal `Run`, the designer shows the text directly on a visual canvas where it can be dragged with the mouse. Text, font, size, color, background, outline and shadow can be edited in the same UI. A normal run creates only a **temporary preview GIF**. `EXPORT GIF NOW` enables the permanent saver for one export run.
+
 > **Status:** Development / pre-release. The workflow and custom nodes are already usable, but the package has not yet been published to the ComfyUI Registry.
 
 ---
