@@ -1,3 +1,4 @@
+import json
 import math
 import os
 import uuid
@@ -197,6 +198,124 @@ def _overlay_text_on_frame(frame, style):
 
     result = Image.alpha_composite(base, overlay)
     return _pil_to_tensor(result, frame.device, frame.dtype)
+
+
+def _default_text_layer(index=0):
+    positions = [(45.2, 5.6), (15.0, 85.0), (85.0, 85.0)]
+    x, y = positions[max(0, min(index, len(positions) - 1))]
+    return {
+        "enabled": index == 0,
+        "text": "LET'S GO!" if index == 0 else "",
+        "font": DEFAULT_FONT,
+        "font_size": 16 if index == 0 else 20,
+        "font_color": "#40e704" if index == 0 else "#ffffff",
+        "x_percent": x,
+        "y_percent": y,
+        "background_enabled": False,
+        "background_color": "#000000",
+        "background_opacity": 160,
+        "padding": 8,
+        "corner_radius": 8,
+        "outline_enabled": True,
+        "outline_color": "#000000",
+        "outline_width": 2,
+        "shadow_enabled": index == 0,
+        "shadow_color": "#000000",
+        "shadow_offset_x": 2,
+        "shadow_offset_y": 2,
+        "line_spacing": 4,
+    }
+
+
+def _normalize_text_layer(value, index=0):
+    base = _default_text_layer(index)
+    if isinstance(value, dict):
+        base.update({k: v for k, v in value.items() if k in base})
+    base["enabled"] = bool(base.get("enabled", False))
+    base["text"] = str(base.get("text", ""))
+    base["font"] = str(base.get("font", DEFAULT_FONT))
+    if base["font"] not in FONT_PATHS:
+        base["font"] = DEFAULT_FONT
+    base["font_size"] = max(6, min(256, int(base.get("font_size", 20))))
+    base["font_color"] = str(base.get("font_color", "#ffffff"))
+    base["x_percent"] = max(0.0, min(100.0, float(base.get("x_percent", 50.0))))
+    base["y_percent"] = max(0.0, min(100.0, float(base.get("y_percent", 50.0))))
+    base["background_enabled"] = bool(base.get("background_enabled", False))
+    base["background_color"] = str(base.get("background_color", "#000000"))
+    base["background_opacity"] = max(0, min(255, int(base.get("background_opacity", 160))))
+    base["padding"] = max(0, min(128, int(base.get("padding", 8))))
+    base["corner_radius"] = max(0, min(128, int(base.get("corner_radius", 8))))
+    base["outline_enabled"] = bool(base.get("outline_enabled", True))
+    base["outline_color"] = str(base.get("outline_color", "#000000"))
+    base["outline_width"] = max(0, min(32, int(base.get("outline_width", 2))))
+    base["shadow_enabled"] = bool(base.get("shadow_enabled", False))
+    base["shadow_color"] = str(base.get("shadow_color", "#000000"))
+    base["shadow_offset_x"] = max(-64, min(64, int(base.get("shadow_offset_x", 2))))
+    base["shadow_offset_y"] = max(-64, min(64, int(base.get("shadow_offset_y", 2))))
+    base["line_spacing"] = max(0, min(64, int(base.get("line_spacing", 4))))
+    return base
+
+
+def _parse_layers_json(value):
+    layers = []
+    try:
+        parsed = json.loads(value) if isinstance(value, str) else value
+        if isinstance(parsed, dict):
+            parsed = parsed.get("layers", [])
+        if isinstance(parsed, list):
+            layers = parsed[:3]
+    except Exception:
+        layers = []
+    normalized = [_normalize_text_layer(layers[i] if i < len(layers) else {}, i) for i in range(3)]
+    return normalized
+
+
+DEFAULT_TEXT_LAYERS = [_default_text_layer(i) for i in range(3)]
+DEFAULT_TEXT_LAYERS_JSON = json.dumps(DEFAULT_TEXT_LAYERS, ensure_ascii=False, separators=(",", ":"))
+FONT_CATALOG_JSON = json.dumps(FONT_CHOICES, ensure_ascii=False, separators=(",", ":"))
+
+
+def _layer_to_render_style(layer):
+    return {
+        "enabled": bool(layer.get("enabled", False)),
+        "text": str(layer.get("text", "")),
+        "font": layer.get("font", DEFAULT_FONT),
+        "font_size": int(layer.get("font_size", 20)),
+        "font_color": layer.get("font_color", "#ffffff"),
+        "position": "Custom (%)",
+        "margin_x": 0,
+        "margin_y": 0,
+        "custom_x_percent": float(layer.get("x_percent", 50.0)),
+        "custom_y_percent": float(layer.get("y_percent", 50.0)),
+        "background_enabled": bool(layer.get("background_enabled", False)),
+        "background_color": layer.get("background_color", "#000000"),
+        "background_opacity": int(layer.get("background_opacity", 160)),
+        "padding": int(layer.get("padding", 8)),
+        "corner_radius": int(layer.get("corner_radius", 8)),
+        "outline_enabled": bool(layer.get("outline_enabled", True)),
+        "outline_color": layer.get("outline_color", "#000000"),
+        "outline_width": int(layer.get("outline_width", 2)),
+        "shadow_enabled": bool(layer.get("shadow_enabled", False)),
+        "shadow_color": layer.get("shadow_color", "#000000"),
+        "shadow_offset_x": int(layer.get("shadow_offset_x", 2)),
+        "shadow_offset_y": int(layer.get("shadow_offset_y", 2)),
+        "line_spacing": int(layer.get("line_spacing", 4)),
+    }
+
+
+def _overlay_text_layers_on_frame(frame, style):
+    if not style.get("enabled", True):
+        return frame
+    layers = style.get("layers")
+    if not isinstance(layers, list):
+        return _overlay_text_on_frame(frame, style)
+    result = frame
+    for index, layer in enumerate(layers[:3]):
+        normalized = _normalize_text_layer(layer, index)
+        if not normalized["enabled"] or not normalized["text"].strip():
+            continue
+        result = _overlay_text_on_frame(result, _layer_to_render_style(normalized))
+    return result
 
 
 class GIFToolkitPrepare:
@@ -482,6 +601,83 @@ class GIFToolkitPrepareV2(GIFToolkitPresetPrepare):
         )
 
 
+class GIFToolkitMultiTextDesigner:
+    """Visual three-layer text designer with an on-node drag canvas."""
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "images": ("IMAGE",),
+                "enabled": ("BOOLEAN", {"default": True}),
+                "layers_json": ("STRING", {"default": DEFAULT_TEXT_LAYERS_JSON, "multiline": True}),
+                "active_layer": ("INT", {"default": 0, "min": 0, "max": 2, "step": 1}),
+                "font_catalog_json": ("STRING", {"default": FONT_CATALOG_JSON, "multiline": True}),
+                "preview_frame": ("INT", {"default": 0, "min": 0, "max": 9999, "step": 1}),
+            },
+            "hidden": {
+                "unique_id": "UNIQUE_ID",
+            },
+        }
+
+    RETURN_TYPES = ("GIF_TEXT_STYLE", "IMAGE")
+    RETURN_NAMES = ("style", "preview")
+    FUNCTION = "design"
+    OUTPUT_NODE = True
+    CATEGORY = "GIF Toolkit/Text"
+    DESCRIPTION = "Visual multi-text designer with up to three independently positioned and styled text layers."
+
+    @classmethod
+    def IS_CHANGED(cls, **kwargs):
+        return float("nan")
+
+    def design(
+        self,
+        images,
+        enabled=True,
+        layers_json=DEFAULT_TEXT_LAYERS_JSON,
+        active_layer=0,
+        font_catalog_json=FONT_CATALOG_JSON,
+        preview_frame=0,
+        unique_id=None,
+    ):
+        if len(images) < 1:
+            raise ValueError("GIF Multi-Text Designer: no input frames.")
+
+        layers = _parse_layers_json(layers_json)
+        active_layer = max(0, min(2, int(active_layer)))
+        idx = max(0, min(int(preview_frame), len(images) - 1))
+        style = {
+            "enabled": bool(enabled),
+            "active_layer": active_layer,
+            "layers": layers,
+        }
+
+        base_frame = images[idx]
+        rendered = _overlay_text_layers_on_frame(base_frame, style).unsqueeze(0)
+
+        temp_dir = folder_paths.get_temp_directory()
+        os.makedirs(temp_dir, exist_ok=True)
+        safe_id = str(unique_id or "multi_designer").replace("/", "_").replace("\\", "_")
+        filename = f"gif_toolkit_multi_designer_{safe_id}_{uuid.uuid4().hex}.png"
+        path = os.path.join(temp_dir, filename)
+        _tensor_frame_to_pil(base_frame).save(path, "PNG")
+
+        return {
+            "ui": {
+                "gif_toolkit_multi_designer": [{
+                    "filename": filename,
+                    "subfolder": "",
+                    "type": "temp",
+                    "frame_index": idx,
+                    "width": int(base_frame.shape[1]),
+                    "height": int(base_frame.shape[0]),
+                }]
+            },
+            "result": (style, rendered),
+        }
+
+
 class GIFToolkitTextDesigner:
     """Visual text designer with an on-node drag canvas.
 
@@ -764,7 +960,7 @@ class GIFToolkitTextOverlay:
         output = []
         for i, frame in enumerate(images):
             visible = (not blink_enabled) or ((i % cycle) < on_frames)
-            output.append(_overlay_text_on_frame(frame, style) if visible else frame)
+            output.append(_overlay_text_layers_on_frame(frame, style) if visible else frame)
         return (torch.stack(output, dim=0),)
 
 
@@ -794,6 +990,7 @@ NODE_CLASS_MAPPINGS = {
     "GIFToolkitPrepare": GIFToolkitPrepare,
     "GIFToolkitPresetPrepare": GIFToolkitPresetPrepare,
     "GIFToolkitPrepareV2": GIFToolkitPrepareV2,
+    "GIFToolkitMultiTextDesigner": GIFToolkitMultiTextDesigner,
     "GIFToolkitTextDesigner": GIFToolkitTextDesigner,
     "GIFToolkitExportGate": GIFToolkitExportGate,
     "GIFToolkitTextStyle": GIFToolkitTextStyle,
@@ -811,7 +1008,8 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "GIFToolkitPrepare": "GIF Prepare / Blink Schedule",
     "GIFToolkitPresetPrepare": "GIF Preset / Prepare (legacy)",
     "GIFToolkitPrepareV2": "GIF Prepare / Preset",
-    "GIFToolkitTextDesigner": "GIF Text Designer",
+    "GIFToolkitMultiTextDesigner": "GIF Multi-Text Designer",
+    "GIFToolkitTextDesigner": "GIF Text Designer (legacy single-layer)",
     "GIFToolkitExportGate": "GIF Export Gate",
     "GIFToolkitTextStyle": "GIF Text Style",
     "GIFToolkitTextPreview": "GIF Text Preview",
