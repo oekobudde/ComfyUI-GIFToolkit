@@ -210,7 +210,7 @@ app.registerExtension({
       }
 
       this.addDOMWidget("guide", "gif_toolkit_guide", root, { serialize: false, hideOnZoom: false });
-      this.setSize([510, 940]);
+      this.setSize([510, 820]);
       update();
       return result;
     };
