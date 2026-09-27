@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.0-dev.1
+- Added `GIF Text Designer`, an inline visual canvas for positioning text by dragging it directly on the preview frame.
+- Text/style controls are presented graphically while the underlying workflow values remain serializable.
+- Added quick 3×3 placement shortcuts plus live font size, text color, background, outline and shadow controls.
+- Added `GIF Export Gate` with preview-first behavior.
+- A normal Run now creates only a temporary GIF preview; permanent output is blocked.
+- Added an `EXPORT GIF NOW` button that arms one export run and returns the workflow to preview mode afterwards.
+- Kept the native `GIF Text Overlay` renderer for final frame-batch rendering and blink timing.
+- The example workflow continues to require only ComfyUI, VideoHelperSuite and ComfyUI-GIFToolkit.
+
 ## 0.2.0-dev.1
 - Replaced the example workflow's KJNodes text path with native GIF Toolkit nodes.
 - Added `GIF Prepare / Preset` with video-only preparation responsibilities.
