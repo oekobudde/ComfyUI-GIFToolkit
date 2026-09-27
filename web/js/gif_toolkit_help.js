@@ -28,7 +28,7 @@ const HELP = {
       <div>• Text, Font, Größe und Farben grafisch einstellen.</div>
       <div>• Pfeilraster = schnelle Positionierung.</div>
       <div>• Background, Outline und Shadow direkt ein-/ausschalten.</div>
-      <div>• enabled aus = kein Text.</div>
+      <div>• Enable text overlay aus = kompletter Textpfad ist aus; Frames laufen unverändert durch.</div>
       <div class="wg-tip">Nach dem ersten Run kannst du Position und Style lokal im Browser ändern, ohne jedes Mal neu zu rendern.</div>
     </section>
 
@@ -83,7 +83,7 @@ const HELP = {
       <div>• Edit text, font, size and colors graphically.</div>
       <div>• Arrow grid = fast positioning shortcuts.</div>
       <div>• Toggle background, outline and shadow directly.</div>
-      <div>• Disable enabled for no text.</div>
+      <div>• Disable Enable text overlay to bypass all text rendering; frames pass through unchanged.</div>
       <div class="wg-tip">After the first Run, position and style changes are local in the browser and do not require repeated rendering.</div>
     </section>
 
