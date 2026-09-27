@@ -1,6 +1,10 @@
 import math
 import os
+import uuid
 from pathlib import Path
+
+import folder_paths
+from comfy_execution.graph import ExecutionBlocker
 
 import numpy as np
 import torch
@@ -478,6 +482,163 @@ class GIFToolkitPrepareV2(GIFToolkitPresetPrepare):
         )
 
 
+class GIFToolkitTextDesigner:
+    """Visual text designer with an on-node drag canvas.
+
+    The browser UI is provided by web/js/gif_text_designer.js. Python keeps the
+    saved workflow values authoritative and renders exactly the same style during
+    final export.
+    """
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "images": ("IMAGE",),
+                "enabled": ("BOOLEAN", {"default": True}),
+                "text": ("STRING", {"default": "LET'S GO!", "multiline": True}),
+                "font": (FONT_CHOICES, {"default": DEFAULT_FONT}),
+                "font_size": ("INT", {"default": 34, "min": 6, "max": 256, "step": 1}),
+                "font_color": ("STRING", {"default": "#ffff00"}),
+                "x_percent": ("FLOAT", {"default": 50.0, "min": 0.0, "max": 100.0, "step": 0.1}),
+                "y_percent": ("FLOAT", {"default": 15.0, "min": 0.0, "max": 100.0, "step": 0.1}),
+                "background_enabled": ("BOOLEAN", {"default": False}),
+                "background_color": ("STRING", {"default": "#000000"}),
+                "background_opacity": ("INT", {"default": 160, "min": 0, "max": 255, "step": 1}),
+                "padding": ("INT", {"default": 8, "min": 0, "max": 128, "step": 1}),
+                "corner_radius": ("INT", {"default": 8, "min": 0, "max": 128, "step": 1}),
+                "outline_enabled": ("BOOLEAN", {"default": True}),
+                "outline_color": ("STRING", {"default": "#000000"}),
+                "outline_width": ("INT", {"default": 2, "min": 0, "max": 32, "step": 1}),
+                "shadow_enabled": ("BOOLEAN", {"default": False}),
+                "shadow_color": ("STRING", {"default": "#000000"}),
+                "shadow_offset_x": ("INT", {"default": 2, "min": -64, "max": 64, "step": 1}),
+                "shadow_offset_y": ("INT", {"default": 2, "min": -64, "max": 64, "step": 1}),
+                "line_spacing": ("INT", {"default": 4, "min": 0, "max": 64, "step": 1}),
+                "preview_frame": ("INT", {"default": 0, "min": 0, "max": 9999, "step": 1}),
+            },
+            "hidden": {
+                "unique_id": "UNIQUE_ID",
+            },
+        }
+
+    RETURN_TYPES = ("GIF_TEXT_STYLE", "IMAGE")
+    RETURN_NAMES = ("style", "preview")
+    FUNCTION = "design"
+    OUTPUT_NODE = True
+    CATEGORY = "GIF Toolkit/Text"
+    DESCRIPTION = "Visual drag-and-drop text designer with an inline preview canvas."
+
+    @classmethod
+    def IS_CHANGED(cls, **kwargs):
+        # The temp preview image must be refreshed on each explicit Run.
+        return float("nan")
+
+    def design(
+        self,
+        images,
+        enabled=True,
+        text="LET'S GO!",
+        font=DEFAULT_FONT,
+        font_size=34,
+        font_color="#ffff00",
+        x_percent=50.0,
+        y_percent=15.0,
+        background_enabled=False,
+        background_color="#000000",
+        background_opacity=160,
+        padding=8,
+        corner_radius=8,
+        outline_enabled=True,
+        outline_color="#000000",
+        outline_width=2,
+        shadow_enabled=False,
+        shadow_color="#000000",
+        shadow_offset_x=2,
+        shadow_offset_y=2,
+        line_spacing=4,
+        preview_frame=0,
+        unique_id=None,
+    ):
+        if len(images) < 1:
+            raise ValueError("GIF Text Designer: no input frames.")
+
+        idx = max(0, min(int(preview_frame), len(images) - 1))
+        style = {
+            "enabled": bool(enabled),
+            "text": str(text),
+            "font": font,
+            "font_size": int(font_size),
+            "font_color": str(font_color),
+            "position": "Custom (%)",
+            "margin_x": 0,
+            "margin_y": 0,
+            "custom_x_percent": float(x_percent),
+            "custom_y_percent": float(y_percent),
+            "background_enabled": bool(background_enabled),
+            "background_color": str(background_color),
+            "background_opacity": int(background_opacity),
+            "padding": int(padding),
+            "corner_radius": int(corner_radius),
+            "outline_enabled": bool(outline_enabled),
+            "outline_color": str(outline_color),
+            "outline_width": int(outline_width),
+            "shadow_enabled": bool(shadow_enabled),
+            "shadow_color": str(shadow_color),
+            "shadow_offset_x": int(shadow_offset_x),
+            "shadow_offset_y": int(shadow_offset_y),
+            "line_spacing": int(line_spacing),
+        }
+
+        base_frame = images[idx]
+        rendered = _overlay_text_on_frame(base_frame, style).unsqueeze(0)
+
+        temp_dir = folder_paths.get_temp_directory()
+        os.makedirs(temp_dir, exist_ok=True)
+        safe_id = str(unique_id or "designer").replace("/", "_").replace("\\", "_")
+        filename = f"gif_toolkit_designer_{safe_id}_{uuid.uuid4().hex}.png"
+        path = os.path.join(temp_dir, filename)
+        _tensor_frame_to_pil(base_frame).save(path, "PNG")
+
+        return {
+            "ui": {
+                "gif_toolkit_designer": [{
+                    "filename": filename,
+                    "subfolder": "",
+                    "type": "temp",
+                    "frame_index": idx,
+                    "width": int(base_frame.shape[1]),
+                    "height": int(base_frame.shape[0]),
+                }]
+            },
+            "result": (style, rendered),
+        }
+
+
+class GIFToolkitExportGate:
+    """Silently blocks the permanent GIF saver while the workflow is in preview mode."""
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "images": ("IMAGE",),
+                "export_enabled": ("BOOLEAN", {"default": False}),
+            }
+        }
+
+    RETURN_TYPES = ("IMAGE",)
+    RETURN_NAMES = ("images",)
+    FUNCTION = "gate"
+    CATEGORY = "GIF Toolkit/Output"
+    DESCRIPTION = "Preview-only by default. Enable export to allow the permanent saver to run."
+
+    def gate(self, images, export_enabled=False):
+        if not export_enabled:
+            return (ExecutionBlocker(None),)
+        return (images,)
+
+
 class GIFToolkitTextStyle:
     """Create a reusable text style object shared by Preview and Overlay."""
 
@@ -627,6 +788,8 @@ NODE_CLASS_MAPPINGS = {
     "GIFToolkitPrepare": GIFToolkitPrepare,
     "GIFToolkitPresetPrepare": GIFToolkitPresetPrepare,
     "GIFToolkitPrepareV2": GIFToolkitPrepareV2,
+    "GIFToolkitTextDesigner": GIFToolkitTextDesigner,
+    "GIFToolkitExportGate": GIFToolkitExportGate,
     "GIFToolkitTextStyle": GIFToolkitTextStyle,
     "GIFToolkitTextPreview": GIFToolkitTextPreview,
     "GIFToolkitTextOverlay": GIFToolkitTextOverlay,
@@ -642,6 +805,8 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "GIFToolkitPrepare": "GIF Prepare / Blink Schedule",
     "GIFToolkitPresetPrepare": "GIF Preset / Prepare (legacy)",
     "GIFToolkitPrepareV2": "GIF Prepare / Preset",
+    "GIFToolkitTextDesigner": "GIF Text Designer",
+    "GIFToolkitExportGate": "GIF Export Gate",
     "GIFToolkitTextStyle": "GIF Text Style",
     "GIFToolkitTextPreview": "GIF Text Preview",
     "GIFToolkitTextOverlay": "GIF Text Overlay",
