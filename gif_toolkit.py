@@ -1,6 +1,197 @@
 import math
+import os
+from pathlib import Path
+
+import numpy as np
 import torch
 import torch.nn.functional as F
+from PIL import Image, ImageColor, ImageDraw, ImageFont
+
+
+def _discover_fonts():
+    """Return a stable display-name -> font-path map without requiring another node pack."""
+    found = {"PIL Default": None}
+    roots = [
+        Path(__file__).resolve().parent / "fonts",
+        Path("C:/Windows/Fonts"),
+        Path("/usr/share/fonts"),
+        Path("/usr/local/share/fonts"),
+        Path.home() / ".fonts",
+        Path.home() / "Library/Fonts",
+        Path("/Library/Fonts"),
+        Path("/System/Library/Fonts"),
+    ]
+    for root in roots:
+        try:
+            if not root.exists():
+                continue
+            for base, _, files in os.walk(root):
+                for name in files:
+                    if not name.lower().endswith((".ttf", ".otf", ".ttc")):
+                        continue
+                    path = str(Path(base) / name)
+                    label = name
+                    if label not in found:
+                        found[label] = path
+        except OSError:
+            continue
+    return found
+
+
+FONT_PATHS = _discover_fonts()
+FONT_CHOICES = list(FONT_PATHS.keys())
+
+
+def _default_font_choice():
+    preferred = ("arialbd.ttf", "dejavusans-bold.ttf", "arial.ttf", "dejavusans.ttf")
+    lower = {name.lower(): name for name in FONT_CHOICES}
+    for key in preferred:
+        if key in lower:
+            return lower[key]
+    return FONT_CHOICES[0]
+
+
+DEFAULT_FONT = _default_font_choice()
+
+
+def _load_font(choice, size):
+    path = FONT_PATHS.get(choice)
+    if path:
+        try:
+            return ImageFont.truetype(path, int(size))
+        except Exception:
+            pass
+    try:
+        return ImageFont.load_default(size=int(size))
+    except TypeError:
+        return ImageFont.load_default()
+
+
+def _rgb(value, fallback):
+    try:
+        return ImageColor.getrgb(str(value))
+    except Exception:
+        return ImageColor.getrgb(fallback)
+
+
+def _tensor_frame_to_pil(frame):
+    array = frame.detach().clamp(0, 1).mul(255).round().to(torch.uint8).cpu().numpy()
+    if array.shape[-1] == 4:
+        return Image.fromarray(array, mode="RGBA")
+    return Image.fromarray(array[..., :3], mode="RGB")
+
+
+def _pil_to_tensor(image, device, dtype):
+    array = np.asarray(image.convert("RGB"), dtype=np.float32) / 255.0
+    return torch.from_numpy(array).to(device=device, dtype=dtype)
+
+
+def _text_box(draw, text, font, stroke_width, spacing):
+    try:
+        bbox = draw.multiline_textbbox(
+            (0, 0), text, font=font, stroke_width=stroke_width, spacing=spacing, align="center"
+        )
+    except AttributeError:
+        bbox = draw.textbbox((0, 0), text, font=font, stroke_width=stroke_width)
+    return bbox
+
+
+def _overlay_text_on_frame(frame, style):
+    text = str(style.get("text", ""))
+    if not style.get("enabled", True) or not text.strip():
+        return frame
+
+    base = _tensor_frame_to_pil(frame).convert("RGBA")
+    overlay = Image.new("RGBA", base.size, (0, 0, 0, 0))
+    draw = ImageDraw.Draw(overlay)
+
+    font = _load_font(style.get("font", DEFAULT_FONT), style.get("font_size", 34))
+    outline_width = int(style.get("outline_width", 0)) if style.get("outline_enabled", True) else 0
+    line_spacing = int(style.get("line_spacing", 4))
+    bbox = _text_box(draw, text, font, outline_width, line_spacing)
+    text_w = max(1, bbox[2] - bbox[0])
+    text_h = max(1, bbox[3] - bbox[1])
+
+    background_enabled = bool(style.get("background_enabled", False))
+    padding = int(style.get("padding", 8)) if background_enabled else 0
+    box_w = text_w + padding * 2
+    box_h = text_h + padding * 2
+
+    image_w, image_h = base.size
+    margin_x = int(style.get("margin_x", 16))
+    margin_y = int(style.get("margin_y", 16))
+    position = style.get("position", "Top Center")
+
+    if position == "Custom (%)":
+        center_x = image_w * float(style.get("custom_x_percent", 50.0)) / 100.0
+        center_y = image_h * float(style.get("custom_y_percent", 15.0)) / 100.0
+        box_x = int(round(center_x - box_w / 2))
+        box_y = int(round(center_y - box_h / 2))
+    else:
+        cols = {
+            "Left": margin_x,
+            "Center": int(round((image_w - box_w) / 2)),
+            "Right": image_w - box_w - margin_x,
+        }
+        rows = {
+            "Top": margin_y,
+            "Center": int(round((image_h - box_h) / 2)),
+            "Bottom": image_h - box_h - margin_y,
+        }
+        parts = position.split(" ")
+        if position == "Center":
+            row_name, col_name = "Center", "Center"
+        else:
+            row_name = parts[0]
+            col_name = parts[1] if len(parts) > 1 else "Center"
+        box_x = cols.get(col_name, cols["Center"])
+        box_y = rows.get(row_name, rows["Top"])
+
+    box_x = max(0, min(image_w - box_w, box_x))
+    box_y = max(0, min(image_h - box_h, box_y))
+
+    if background_enabled:
+        bg = _rgb(style.get("background_color", "black"), "black")
+        alpha = int(max(0, min(255, style.get("background_opacity", 160))))
+        radius = max(0, int(style.get("corner_radius", 8)))
+        draw.rounded_rectangle(
+            [box_x, box_y, box_x + box_w, box_y + box_h],
+            radius=radius,
+            fill=(*bg, alpha),
+        )
+
+    text_x = box_x + padding - bbox[0]
+    text_y = box_y + padding - bbox[1]
+
+    if style.get("shadow_enabled", False):
+        shadow = _rgb(style.get("shadow_color", "black"), "black")
+        draw.multiline_text(
+            (text_x + int(style.get("shadow_offset_x", 2)),
+             text_y + int(style.get("shadow_offset_y", 2))),
+            text,
+            font=font,
+            fill=(*shadow, 220),
+            spacing=line_spacing,
+            align="center",
+            stroke_width=outline_width,
+            stroke_fill=(*shadow, 220),
+        )
+
+    fill = _rgb(style.get("font_color", "yellow"), "yellow")
+    outline = _rgb(style.get("outline_color", "black"), "black")
+    draw.multiline_text(
+        (text_x, text_y),
+        text,
+        font=font,
+        fill=(*fill, 255),
+        spacing=line_spacing,
+        align="center",
+        stroke_width=outline_width,
+        stroke_fill=(*outline, 255),
+    )
+
+    result = Image.alpha_composite(base, overlay)
+    return _pil_to_tensor(result, frame.device, frame.dtype)
 
 
 class GIFToolkitPrepare:
@@ -214,6 +405,201 @@ class GIFToolkitPresetPrepare:
         return (resized, indexes_string, float(target_fps), frame_count, float(actual_duration), tw, th, settings)
 
 
+class GIFToolkitPrepareV2(GIFToolkitPresetPrepare):
+    """Clean v0.2 video preparation: ratio, size, FPS and duration only."""
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "images": ("IMAGE",),
+                "video_info": ("VHS_VIDEOINFO",),
+                "preset": (["Small", "Balanced", "Quality", "Custom"], {"default": "Balanced"}),
+                "aspect_ratio": (["Auto (Input Image)", "1:1", "16:9", "9:16", "4:3", "3:4"], {"default": "Auto (Input Image)"}),
+                "custom_long_side": ("INT", {"default": 320, "min": 128, "max": 1024, "step": 8}),
+                "custom_fps": ("FLOAT", {"default": 8.0, "min": 2.0, "max": 24.0, "step": 1.0}),
+                "custom_duration_seconds": ("FLOAT", {"default": 5.0, "min": 0.5, "max": 30.0, "step": 0.5}),
+            }
+        }
+
+    RETURN_TYPES = ("IMAGE", "FLOAT", "INT", "FLOAT", "INT", "INT", "STRING")
+    RETURN_NAMES = ("images", "fps", "frame_count", "duration_seconds", "width", "height", "settings")
+    FUNCTION = "prepare_v2"
+    CATEGORY = "GIF Toolkit"
+    DESCRIPTION = "Prepare video frames for GIF output: preset, aspect ratio, resize, FPS and duration."
+
+    def prepare_v2(
+        self,
+        images,
+        video_info,
+        preset="Balanced",
+        aspect_ratio="Auto (Input Image)",
+        custom_long_side=320,
+        custom_fps=8.0,
+        custom_duration_seconds=5.0,
+    ):
+        if len(images) < 1:
+            raise ValueError("GIF Prepare: input video contains no frames.")
+
+        source_fps = self._read_fps(video_info)
+        if preset == "Custom":
+            long_side = int(custom_long_side)
+            target_fps = float(custom_fps)
+            duration = float(custom_duration_seconds)
+        else:
+            p = self.PRESETS[preset]
+            long_side = int(p["long_side"])
+            target_fps = float(p["fps"])
+            duration = float(p["duration"])
+
+        sampled, target_fps, actual_duration = self._resample_frames(
+            images, source_fps, target_fps, duration
+        )
+        if aspect_ratio != "Auto (Input Image)":
+            sampled = self._crop_to_ratio(sampled, self.RATIOS[aspect_ratio])
+
+        _, h, w, _ = sampled.shape
+        tw, th = self._target_size(w, h, long_side)
+        resized = self._resize(sampled, tw, th)
+        frame_count = int(len(resized))
+        settings = (
+            f"{preset} | {tw}x{th} | {target_fps:g} FPS | "
+            f"{actual_duration:.2f}s | ratio={aspect_ratio}"
+        )
+        return (
+            resized,
+            float(target_fps),
+            frame_count,
+            float(actual_duration),
+            tw,
+            th,
+            settings,
+        )
+
+
+class GIFToolkitTextStyle:
+    """Create a reusable text style object shared by Preview and Overlay."""
+
+    POSITIONS = [
+        "Top Left", "Top Center", "Top Right",
+        "Center Left", "Center", "Center Right",
+        "Bottom Left", "Bottom Center", "Bottom Right",
+        "Custom (%)",
+    ]
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "enabled": ("BOOLEAN", {"default": True}),
+                "text": ("STRING", {"default": "LET'S GO!", "multiline": True}),
+                "font": (FONT_CHOICES, {"default": DEFAULT_FONT}),
+                "font_size": ("INT", {"default": 34, "min": 6, "max": 256, "step": 1}),
+                "font_color": ("STRING", {"default": "yellow"}),
+                "position": (cls.POSITIONS, {"default": "Top Center"}),
+                "margin_x": ("INT", {"default": 16, "min": 0, "max": 1024, "step": 1}),
+                "margin_y": ("INT", {"default": 16, "min": 0, "max": 1024, "step": 1}),
+                "custom_x_percent": ("FLOAT", {"default": 50.0, "min": 0.0, "max": 100.0, "step": 1.0}),
+                "custom_y_percent": ("FLOAT", {"default": 15.0, "min": 0.0, "max": 100.0, "step": 1.0}),
+                "background_enabled": ("BOOLEAN", {"default": False}),
+                "background_color": ("STRING", {"default": "black"}),
+                "background_opacity": ("INT", {"default": 160, "min": 0, "max": 255, "step": 1}),
+                "padding": ("INT", {"default": 8, "min": 0, "max": 128, "step": 1}),
+                "corner_radius": ("INT", {"default": 8, "min": 0, "max": 128, "step": 1}),
+                "outline_enabled": ("BOOLEAN", {"default": True}),
+                "outline_color": ("STRING", {"default": "black"}),
+                "outline_width": ("INT", {"default": 2, "min": 0, "max": 32, "step": 1}),
+                "shadow_enabled": ("BOOLEAN", {"default": False}),
+                "shadow_color": ("STRING", {"default": "black"}),
+                "shadow_offset_x": ("INT", {"default": 2, "min": -64, "max": 64, "step": 1}),
+                "shadow_offset_y": ("INT", {"default": 2, "min": -64, "max": 64, "step": 1}),
+                "line_spacing": ("INT", {"default": 4, "min": 0, "max": 64, "step": 1}),
+            }
+        }
+
+    RETURN_TYPES = ("GIF_TEXT_STYLE",)
+    RETURN_NAMES = ("style",)
+    FUNCTION = "build"
+    CATEGORY = "GIF Toolkit/Text"
+    DESCRIPTION = "Reusable text style with human-friendly anchor positions instead of raw X/Y placement."
+
+    def build(self, **kwargs):
+        return (dict(kwargs),)
+
+
+class GIFToolkitTextPreview:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "images": ("IMAGE",),
+                "style": ("GIF_TEXT_STYLE",),
+                "preview_frame": ("INT", {"default": 0, "min": 0, "max": 9999, "step": 1}),
+            }
+        }
+
+    RETURN_TYPES = ("IMAGE",)
+    RETURN_NAMES = ("preview",)
+    FUNCTION = "preview"
+    CATEGORY = "GIF Toolkit/Text"
+    DESCRIPTION = "Render the text style on a single frame for quick positioning."
+
+    def preview(self, images, style, preview_frame=0):
+        if len(images) < 1:
+            raise ValueError("GIF Text Preview: no input frames.")
+        idx = max(0, min(int(preview_frame), len(images) - 1))
+        frame = images[idx]
+        rendered = _overlay_text_on_frame(frame, style)
+        return (rendered.unsqueeze(0),)
+
+
+class GIFToolkitTextOverlay:
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "images": ("IMAGE",),
+                "fps": ("FLOAT", {"default": 8.0, "min": 0.1, "max": 120.0, "step": 0.1}),
+                "style": ("GIF_TEXT_STYLE",),
+                "blink_enabled": ("BOOLEAN", {"default": True}),
+                "blink_on_seconds": ("FLOAT", {"default": 0.5, "min": 0.05, "max": 10.0, "step": 0.05}),
+                "blink_off_seconds": ("FLOAT", {"default": 0.5, "min": 0.05, "max": 10.0, "step": 0.05}),
+            }
+        }
+
+    RETURN_TYPES = ("IMAGE",)
+    RETURN_NAMES = ("images",)
+    FUNCTION = "apply"
+    CATEGORY = "GIF Toolkit/Text"
+    DESCRIPTION = "Apply text and optional blinking directly to the complete frame batch."
+
+    def apply(
+        self,
+        images,
+        fps,
+        style,
+        blink_enabled=True,
+        blink_on_seconds=0.5,
+        blink_off_seconds=0.5,
+    ):
+        if len(images) < 1 or not style.get("enabled", True) or not str(style.get("text", "")).strip():
+            return (images,)
+
+        fps = max(0.1, float(fps))
+        if blink_enabled:
+            on_frames = max(1, int(round(float(blink_on_seconds) * fps)))
+            off_frames = max(1, int(round(float(blink_off_seconds) * fps)))
+            cycle = on_frames + off_frames
+        else:
+            on_frames, cycle = 1, 1
+
+        output = []
+        for i, frame in enumerate(images):
+            visible = (not blink_enabled) or ((i % cycle) < on_frames)
+            output.append(_overlay_text_on_frame(frame, style) if visible else frame)
+        return (torch.stack(output, dim=0),)
+
+
 class GIFToolkitGuide:
     """UI-only bilingual guide node. The actual help panel is rendered by the bundled JS extension."""
 
@@ -239,6 +625,10 @@ NODE_CLASS_MAPPINGS = {
     "GIFToolkitGuide": GIFToolkitGuide,
     "GIFToolkitPrepare": GIFToolkitPrepare,
     "GIFToolkitPresetPrepare": GIFToolkitPresetPrepare,
+    "GIFToolkitPrepareV2": GIFToolkitPrepareV2,
+    "GIFToolkitTextStyle": GIFToolkitTextStyle,
+    "GIFToolkitTextPreview": GIFToolkitTextPreview,
+    "GIFToolkitTextOverlay": GIFToolkitTextOverlay,
 
     # Backward-compatible aliases for workflows created before the project rename.
     "WebexGIFGuide": GIFToolkitGuide,
@@ -249,7 +639,11 @@ NODE_CLASS_MAPPINGS = {
 NODE_DISPLAY_NAME_MAPPINGS = {
     "GIFToolkitGuide": "GIF Toolkit Guide / Hilfe (DE-EN)",
     "GIFToolkitPrepare": "GIF Prepare / Blink Schedule",
-    "GIFToolkitPresetPrepare": "GIF Preset / Prepare",
+    "GIFToolkitPresetPrepare": "GIF Preset / Prepare (legacy)",
+    "GIFToolkitPrepareV2": "GIF Prepare / Preset",
+    "GIFToolkitTextStyle": "GIF Text Style",
+    "GIFToolkitTextPreview": "GIF Text Preview",
+    "GIFToolkitTextOverlay": "GIF Text Overlay",
     "WebexGIFGuide": "GIF Toolkit Guide / Hilfe (legacy alias)",
     "WebexGIFPrepare": "GIF Prepare / Blink Schedule (legacy alias)",
     "WebexGIFPresetPrepare": "GIF Preset / Prepare (legacy alias)",
