@@ -1,4 +1,4 @@
-from .webex_gif_tools import NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS
+from .gif_toolkit import NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS
 
 WEB_DIRECTORY = "./web/js"
 
