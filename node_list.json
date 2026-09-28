@@ -1,0 +1,7 @@
+{
+  "GIFToolkitGuide": "Bilingual on-canvas guide for the GIF Toolkit workflow.",
+  "GIFToolkitPrepareV2": "Prepare video frames for compact GIF output: presets, aspect ratio, resize, FPS and duration.",
+  "GIFToolkitMultiTextDesigner": "Visual designer for up to three independently positioned and styled text layers.",
+  "GIFToolkitTextOverlay": "Apply text layers and optional blinking to the complete frame batch.",
+  "GIFToolkitExportGate": "Preview-first gate that blocks permanent GIF saving until explicitly approved."
+}
