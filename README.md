@@ -24,9 +24,6 @@ The workflow:
 
 The text designer is visual: text can be clicked directly on the preview frame and dragged with the mouse.
 
-### Animated example
-
-![Animated GIF example](docs/images/example-output.gif)
 
 ## Requirements
 
