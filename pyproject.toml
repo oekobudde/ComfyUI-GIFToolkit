@@ -1,7 +1,7 @@
 [project]
-name = "webex-gif-tools"
-version = "0.1.0"
-description = "ComfyUI helper nodes and workflow for compact looping GIFs with presets, aspect handling and optional blinking text."
+name = "gif-toolkit"
+version = "0.4.0"
+description = "Create compact looping GIFs in ComfyUI with preset sizing, visual multi-text placement, optional blinking and preview-first export."
 requires-python = ">=3.10"
 dependencies = []
 classifiers = [
@@ -13,9 +13,7 @@ Repository = "https://github.com/oekobudde/ComfyUI-GIFToolkit"
 Documentation = "https://github.com/oekobudde/ComfyUI-GIFToolkit#readme"
 "Bug Tracker" = "https://github.com/oekobudde/ComfyUI-GIFToolkit/issues"
 
-# Fill this block only after the Comfy Registry publisher has been created.
-# The PublisherId is immutable for the Registry identity, so do not guess it.
-# [tool.comfy]
-# PublisherId = "YOUR_PUBLISHER_ID"
-# DisplayName = "GIF Toolkit"
-# Icon = ""
+[tool.comfy]
+PublisherId = "oekobudde"
+DisplayName = "GIF Toolkit"
+Icon = ""
