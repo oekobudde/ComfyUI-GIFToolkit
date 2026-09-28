@@ -946,7 +946,19 @@ class GIFToolkitTextOverlay:
         blink_on_seconds=0.5,
         blink_off_seconds=0.5,
     ):
-        if len(images) < 1 or not style.get("enabled", True) or not str(style.get("text", "")).strip():
+        if len(images) < 1 or not style.get("enabled", True):
+            return (images,)
+
+        layers = style.get("layers")
+        if isinstance(layers, list):
+            has_visible_text = any(
+                bool(_normalize_text_layer(layer, i).get("enabled", False))
+                and bool(str(_normalize_text_layer(layer, i).get("text", "")).strip())
+                for i, layer in enumerate(layers[:3])
+            )
+            if not has_visible_text:
+                return (images,)
+        elif not str(style.get("text", "")).strip():
             return (images,)
 
         fps = max(0.1, float(fps))
