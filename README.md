@@ -12,7 +12,7 @@ Create compact looping GIFs from short videos directly in ComfyUI, with preset s
 
 `ComfyUI-GIFToolkit` adds custom helper nodes and a ready-to-use workflow for short looping GIFs.
 
-The current workflow:
+The workflow:
 
 1. loads video through **VideoHelperSuite**
 2. controls target size, aspect ratio, FPS and duration
@@ -27,8 +27,6 @@ The text designer is visual: text can be clicked directly on the preview frame a
 - ComfyUI
 - [ComfyUI-VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite)
 - this repository: `ComfyUI-GIFToolkit`
-
-**KJNodes is no longer required by the current workflow.**
 
 `ComfyUI-GIFToolkit` currently has no additional pip dependencies.
 
@@ -308,5 +306,3 @@ Reduce duration, long-side size, or FPS.
 Required:
 - ComfyUI-VideoHelperSuite
 - ComfyUI-GIFToolkit
-
-KJNodes is not required by the current workflow.
