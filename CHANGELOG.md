@@ -7,6 +7,7 @@
 - Retained a single global `Enable text overlay` switch that bypasses all text rendering without rewiring the workflow.
 - Extended `GIF Text Overlay` to render all enabled layers while keeping blink timing global.
 - Updated the bilingual on-canvas guide and README with the complete multi-text workflow and parameter reference.
+- Split repository documentation into an English `README.md` and a German `README_DE.md` with reciprocal language links.
 - KJNodes remains unnecessary for the current example workflow.
 
 ## 0.3.0-dev.1
