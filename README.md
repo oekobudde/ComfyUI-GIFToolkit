@@ -315,3 +315,9 @@ Reduce duration, long-side size, or FPS.
 Required:
 - ComfyUI-VideoHelperSuite
 - ComfyUI-GIFToolkit
+
+---
+
+## License
+
+MIT License. See [LICENSE](LICENSE).
