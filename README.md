@@ -24,6 +24,10 @@ The workflow:
 
 The text designer is visual: text can be clicked directly on the preview frame and dragged with the mouse.
 
+### Example output
+
+![Example output frame](docs/images/example-output.webp)
+
 ## Requirements
 
 - ComfyUI
@@ -141,6 +145,8 @@ Controls:
 
 The central text UI.
 
+![GIF Multi-Text Designer with three text layers](docs/images/multi-text-designer.webp)
+
 #### `Enable text overlay`
 Global master switch.
 
@@ -216,6 +222,8 @@ Contains:
 - shadow X/Y
 - line spacing
 
+![Advanced style controls](docs/images/advanced-style.webp)
+
 The node automatically fits its height when Advanced style opens or closes.
 
 #### Preview frame
@@ -245,6 +253,8 @@ Shared blink rhythm.
 Uses VHS Video Combine with `save_output = false`.
 
 A normal Run creates only a temporary GIF for review.
+
+![Preview, approval gate and final GIF export](docs/images/preview-export.webp)
 
 ---
 
@@ -286,8 +296,8 @@ All three layers are bypassed at once and frames pass through unchanged.
 
 ## Troubleshooting
 
-### Designer is blank before the first Run
-Expected. Run once to load the preview frame.
+### No source frame is visible before the first Run
+Before the first Run, the designer uses a black background and already shows enabled text layers. Run once to load the real source frame behind the text.
 
 ### Text cannot be dragged
 Check that:
