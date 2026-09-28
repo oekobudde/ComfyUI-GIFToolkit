@@ -24,9 +24,9 @@ Der aktuelle Workflow:
 
 Der Text-Designer ist grafisch aufgebaut: Texte können direkt auf dem Preview-Frame angeklickt und mit der Maus verschoben werden.
 
-### Beispielausgabe
+### Animiertes Beispiel
 
-![Beispielausgabe](docs/images/example-output.webp)
+![Animiertes GIF-Beispiel](docs/images/example-output.gif)
 
 ## Voraussetzungen
 
