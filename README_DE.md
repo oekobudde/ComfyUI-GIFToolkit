@@ -6,6 +6,8 @@ Erstelle kompakte, wiederholende GIFs aus kurzen Videos direkt in ComfyUI – mi
 
 > **Status:** Entwicklung / Pre-Release. Der aktuelle Entwicklungsworkflow unterstützt bis zu drei unabhängige Text-Layer und ist noch nicht in der ComfyUI Registry veröffentlicht.
 
+![ComfyUI-GIFToolkit Workflow-Übersicht](docs/images/workflow-overview.jpg)
+
 ---
 
 ## Überblick
