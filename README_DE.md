@@ -431,3 +431,9 @@ Das ist im Preview-Modus absichtlich so. Bei `4B` **✓ APPROVE & EXPORT FINAL G
 Benötigt werden:
 - ComfyUI-VideoHelperSuite
 - ComfyUI-GIFToolkit
+
+---
+
+## Lizenz
+
+MIT-Lizenz. Siehe [LICENSE](LICENSE).
