@@ -28,8 +28,6 @@ Der Text-Designer ist grafisch aufgebaut: Texte können direkt auf dem Preview-F
 - [ComfyUI-VideoHelperSuite](https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite)
 - dieses Repository: `ComfyUI-GIFToolkit`
 
-**KJNodes wird im aktuellen Workflow nicht mehr benötigt.**
-
 Für `ComfyUI-GIFToolkit` selbst sind derzeit keine zusätzlichen pip-Pakete erforderlich.
 
 ### Drittanbieter-Abhängigkeit
@@ -424,5 +422,3 @@ Das ist im Preview-Modus absichtlich so. Bei `4B` **✓ APPROVE & EXPORT FINAL G
 Benötigt werden:
 - ComfyUI-VideoHelperSuite
 - ComfyUI-GIFToolkit
-
-KJNodes wird für den aktuellen Workflow nicht benötigt.
