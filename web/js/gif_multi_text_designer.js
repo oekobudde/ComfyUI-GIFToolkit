@@ -460,15 +460,16 @@ function multiDesignerUI(node) {
     ctx.clearRect(0,0,canvas.width,canvas.height);
     ctx.fillStyle="#090909";ctx.fillRect(0,0,canvas.width,canvas.height);
 
+    imageRect={x:0,y:0,w:canvas.width,h:canvas.height};
     if(!bg){
-      imageRect={x:0,y:0,w:canvas.width,h:canvas.height};
-      ctx.fillStyle="#777";ctx.textAlign="center";ctx.font="14px sans-serif";
-      ctx.fillText("Run once to load a preview frame",canvas.width/2,canvas.height/2);
-      textRects=[];return;
+      ctx.fillStyle="#777";
+      ctx.textAlign="center";
+      ctx.font="12px sans-serif";
+      ctx.fillText("No preview frame loaded yet",canvas.width/2,canvas.height-14);
+    } else {
+      ctx.drawImage(bg,0,0,canvas.width,canvas.height);
     }
 
-    imageRect={x:0,y:0,w:canvas.width,h:canvas.height};
-    ctx.drawImage(bg,0,0,canvas.width,canvas.height);
     textRects=[];
     if(!widget(node,"enabled")?.value) return;
 
