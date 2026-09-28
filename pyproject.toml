@@ -13,9 +13,7 @@ Repository = "https://github.com/oekobudde/ComfyUI-GIFToolkit"
 Documentation = "https://github.com/oekobudde/ComfyUI-GIFToolkit#readme"
 "Bug Tracker" = "https://github.com/oekobudde/ComfyUI-GIFToolkit/issues"
 
-# Fill this block only after the Comfy Registry publisher has been created.
-# The PublisherId is immutable for the Registry identity, so do not guess it.
-# [tool.comfy]
-# PublisherId = "YOUR_PUBLISHER_ID"
-# DisplayName = "GIF Toolkit"
-# Icon = ""
+[tool.comfy]
+PublisherId = "oekobudde"
+DisplayName = "GIF Toolkit"
+Icon = ""
