@@ -1,6 +1,9 @@
 # Parameter Reference / Feldreferenz
 
-The complete, maintained parameter reference now lives in the main [README](../README.md).
+The maintained parameter documentation is split by language:
+
+- **English:** [README.md](../README.md#field-reference--english)
+- **Deutsch:** [README_DE.md](../README_DE.md#feldreferenz--deutsch)
 
 ## Deutsch
 
@@ -24,7 +27,7 @@ Dokumentiert sind:
 - GIF Export Gate
 - FINAL GIF
 
-Siehe: [Feldreferenz — Deutsch](../README.md#feldreferenz--deutsch)
+Siehe: [Feldreferenz — Deutsch](../README_DE.md#feldreferenz--deutsch)
 
 ## English
 
