@@ -398,8 +398,8 @@
         "pingpong": false,
         "save_output": false
       },
-      "color": "#3b3a63",
-      "bgcolor": "#272747",
+      "color": "#244b2b",
+      "bgcolor": "#345f3c",
       "widgets_values_named": {
         "frame_rate": 8,
         "loop_count": 0,
