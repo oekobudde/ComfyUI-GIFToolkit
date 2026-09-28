@@ -24,6 +24,10 @@ Der aktuelle Workflow:
 
 Der Text-Designer ist grafisch aufgebaut: Texte können direkt auf dem Preview-Frame angeklickt und mit der Maus verschoben werden.
 
+### Beispielausgabe
+
+![Beispielausgabe](docs/images/example-output.webp)
+
 ## Voraussetzungen
 
 - ComfyUI
@@ -213,6 +217,8 @@ Nur bei `Custom`: maximale Dauer.
 
 Die zentrale Text-UI.
 
+![GIF Multi-Text Designer mit drei Text-Layern](docs/images/multi-text-designer.webp)
+
 #### `Enable text overlay`
 Master-Schalter.
 
@@ -300,6 +306,8 @@ Enthält:
 - Shadow Y
 - Line spacing
 
+![Advanced-Style-Einstellungen](docs/images/advanced-style.webp)
+
 Die Node passt ihre Höhe beim Auf- und Zuklappen automatisch an.
 
 #### Preview Frame
@@ -336,6 +344,8 @@ save_output = false
 ```
 
 Der normale Run erzeugt nur ein temporäres GIF zur Kontrolle.
+
+![Preview, Freigabe und finaler GIF-Export](docs/images/preview-export.webp)
 
 ---
 
@@ -399,8 +409,8 @@ Praktischer Ausgangspunkt:
 
 ## Troubleshooting
 
-### Designer zeigt vor dem ersten Run nur eine schwarze Fläche
-Normal. Einmal **Run** starten, damit ein echter Preview-Frame geladen wird.
+### Vor dem ersten Run ist noch kein Quellbild sichtbar
+Vor dem ersten Run verwendet der Designer einen schwarzen Hintergrund und zeigt bereits die aktivierten Text-Layer. Einmal **Run** starten, damit der echte Quell-Frame hinter den Texten geladen wird.
 
 ### Text lässt sich nicht ziehen
 Prüfen:
