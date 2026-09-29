@@ -1,6 +1,6 @@
 {
   "id": "49f40cea-6207-4f36-98da-16ecb6b93058",
-  "revision": 1,
+  "revision": 2,
   "last_node_id": 14,
   "last_link_id": 11,
   "nodes": [
@@ -20,13 +20,14 @@
       "mode": 0,
       "inputs": [],
       "outputs": [],
-      "title": "0 · GUIDE / HILFE · DE ↔ EN",
+      "title": "0 · GUIDE / HELP",
       "properties": {
-        "Node name for S&R": "GIFToolkitGuide"
+        "Node name for S&R": "GIFToolkitGuide",
+        "cnr_id": "gif-toolkit",
+        "ver": "0.4.1",
+        "aux_id": "oekobudde/ComfyUI-GIFToolkit"
       },
-      "widgets_values": [
-        "Deutsch"
-      ],
+      "widgets_values": [],
       "color": "#17212b",
       "bgcolor": "#0b0d10"
     },
@@ -191,7 +192,10 @@
       ],
       "title": "2 → PREPARE · PRESET / SIZE / RATIO / DURATION",
       "properties": {
-        "Node name for S&R": "GIFToolkitPrepareV2"
+        "Node name for S&R": "GIFToolkitPrepareV2",
+        "cnr_id": "gif-toolkit",
+        "ver": "0.4.1",
+        "aux_id": "oekobudde/ComfyUI-GIFToolkit"
       },
       "widgets_values": [
         "Balanced",
@@ -247,7 +251,10 @@
       ],
       "title": "3A → MULTI-TEXT DESIGNER · up to 3 layers",
       "properties": {
-        "Node name for S&R": "GIFToolkitMultiTextDesigner"
+        "Node name for S&R": "GIFToolkitMultiTextDesigner",
+        "cnr_id": "gif-toolkit",
+        "ver": "0.4.1",
+        "aux_id": "oekobudde/ComfyUI-GIFToolkit"
       },
       "widgets_values": [
         true,
@@ -312,7 +319,10 @@
       ],
       "title": "3B → APPLY TEXT / BLINK",
       "properties": {
-        "Node name for S&R": "GIFToolkitTextOverlay"
+        "Node name for S&R": "GIFToolkitTextOverlay",
+        "cnr_id": "gif-toolkit",
+        "ver": "0.4.1",
+        "aux_id": "oekobudde/ComfyUI-GIFToolkit"
       },
       "widgets_values": [
         8,
@@ -441,7 +451,10 @@
       ],
       "title": "4B → APPROVE & EXPORT · CLICK HERE",
       "properties": {
-        "Node name for S&R": "GIFToolkitExportGate"
+        "Node name for S&R": "GIFToolkitExportGate",
+        "cnr_id": "gif-toolkit",
+        "ver": "0.4.1",
+        "aux_id": "oekobudde/ComfyUI-GIFToolkit"
       },
       "widgets_values": [
         false
@@ -691,7 +704,8 @@
     "node_versions": {
       "comfy-core": "0.36.0",
       "comfyui-videohelpersuite": "1.7.9",
-      "plaguekind-nodes": "41f463800fc41a045f511f76256c484e5154b2d6"
+      "plaguekind-nodes": "41f463800fc41a045f511f76256c484e5154b2d6",
+      "gif-toolkit": "0.4.1"
     }
   },
   "version": 0.4
