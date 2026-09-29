@@ -977,23 +977,19 @@ class GIFToolkitTextOverlay:
 
 
 class GIFToolkitGuide:
-    """UI-only bilingual guide node. The actual help panel is rendered by the bundled JS extension."""
+    """UI-only guide node. The help panel is rendered by the bundled JS extension."""
 
     @classmethod
     def INPUT_TYPES(cls):
-        return {
-            "required": {
-                "language": (["Deutsch", "English"], {"default": "Deutsch"}),
-            }
-        }
+        return {"required": {}}
 
     RETURN_TYPES = ()
     FUNCTION = "show"
     CATEGORY = "GIF Toolkit"
     OUTPUT_NODE = True
-    DESCRIPTION = "Bilingual on-canvas guide for the GIF Maker workflow."
+    DESCRIPTION = "On-canvas guide for the GIF Toolkit workflow."
 
-    def show(self, language="Deutsch"):
+    def show(self):
         return ()
 
 
@@ -1016,7 +1012,7 @@ NODE_CLASS_MAPPINGS = {
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "GIFToolkitGuide": "GIF Toolkit Guide / Hilfe (DE-EN)",
+    "GIFToolkitGuide": "GIF Toolkit Guide / Help",
     "GIFToolkitPrepare": "GIF Prepare / Blink Schedule",
     "GIFToolkitPresetPrepare": "GIF Preset / Prepare (legacy)",
     "GIFToolkitPrepareV2": "GIF Prepare / Preset",
@@ -1026,7 +1022,7 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "GIFToolkitTextStyle": "GIF Text Style",
     "GIFToolkitTextPreview": "GIF Text Preview",
     "GIFToolkitTextOverlay": "GIF Text Overlay",
-    "WebexGIFGuide": "GIF Toolkit Guide / Hilfe (legacy alias)",
+    "WebexGIFGuide": "GIF Toolkit Guide / Help (legacy alias)",
     "WebexGIFPrepare": "GIF Prepare / Blink Schedule (legacy alias)",
     "WebexGIFPresetPrepare": "GIF Preset / Prepare (legacy alias)",
 }
