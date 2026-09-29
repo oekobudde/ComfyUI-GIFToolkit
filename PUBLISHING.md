@@ -3,7 +3,7 @@
 ## Current release candidate
 
 - Registry node id: `gif-toolkit`
-- Release version: `0.4.0`
+- Release version: `0.4.1`
 - GitHub repository: `https://github.com/oekobudde/ComfyUI-GIFToolkit`
 - Publishing workflow: `.github/workflows/publish-comfy-registry.yml`
 - Missing-node discovery helper: `node_list.json`
