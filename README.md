@@ -2,9 +2,9 @@
 
 🌐 Language: **English** | [Deutsch](README_DE.md)
 
-Create compact looping GIFs from short videos directly in ComfyUI, with preset sizing, visual multi-text placement, optional blinking, a preview-first export flow, and bilingual on-canvas help.
+Create compact looping GIFs from short videos directly in ComfyUI, with preset sizing, visual multi-text placement, optional blinking, a preview-first export flow, and an English on-canvas guide.
 
-> **Status:** Version 0.4.0 is published to the ComfyUI Registry and can be installed through ComfyUI Manager.
+> **Status:** Published to the ComfyUI Registry. Install through ComfyUI Manager by searching for **GIF Toolkit**.
 
 ![ComfyUI-GIFToolkit workflow overview](docs/images/workflow-overview.jpg)
 
@@ -104,8 +104,8 @@ A normal Run does **not** permanently write the final GIF.
 
 ### 0 · GIF Toolkit Guide / Help
 
-#### `language`
-Switches the on-canvas guide between `Deutsch` and `English`.
+The on-canvas guide uses English by default and no longer has its own language selector.
+Non-English UI translations should use ComfyUI's locale system rather than an in-node language switch.
 
 ---
 
