@@ -2,9 +2,9 @@
 
 🌐 Sprache: [English](README.md) | **Deutsch**
 
-Erstelle kompakte, wiederholende GIFs aus kurzen Videos direkt in ComfyUI – mit Größen-Presets, visuellem Multi-Text-Designer, optionalem Blinken, Preview-vor-Export-Ablauf und zweisprachiger Hilfe direkt im Workflow.
+Erstelle kompakte, wiederholende GIFs aus kurzen Videos direkt in ComfyUI – mit Größen-Presets, visuellem Multi-Text-Designer, optionalem Blinken, Preview-vor-Export-Ablauf und einem englischen Guide direkt im Workflow.
 
-> **Status:** Entwicklung / Pre-Release. Der aktuelle Entwicklungsworkflow unterstützt bis zu drei unabhängige Text-Layer und ist noch nicht in der ComfyUI Registry veröffentlicht.
+> **Status:** In der ComfyUI Registry veröffentlicht. Installation über den ComfyUI Manager: nach **GIF Toolkit** suchen.
 
 ![ComfyUI-GIFToolkit Workflow-Übersicht](docs/images/workflow-overview.jpg)
 
@@ -117,10 +117,10 @@ Ein normaler Run schreibt **kein finales GIF** dauerhaft in den Output-Ordner.
 
 ## Feldreferenz — Deutsch
 
-### 0 · GIF Toolkit Guide / Hilfe
+### 0 · GIF Toolkit Guide / Help
 
-#### `language`
-Schaltet die Hilfe direkt im Workflow zwischen `Deutsch` und `English` um.
+Der Guide in der Node verwendet standardmäßig Englisch und besitzt keinen eigenen Sprachumschalter mehr.
+Weitere UI-Übersetzungen sollen über das Locale-System von ComfyUI erfolgen. Diese deutsche README bleibt als ausführliche deutschsprachige Dokumentation erhalten.
 
 Der Guide verändert das GIF nicht.
 
