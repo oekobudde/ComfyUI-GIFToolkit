@@ -8,19 +8,20 @@
 - Publishing workflow: `.github/workflows/publish-comfy-registry.yml`
 - Missing-node discovery helper: `node_list.json`
 
-## Before the first public release
+## One-time setup
 
-1. Choose and add the repository license.
-2. Make the GitHub repository public.
-3. Create a publisher at https://registry.comfy.org/.
-4. Put the exact publisher id into `[tool.comfy].PublisherId` in `pyproject.toml`.
-5. Create a Comfy Registry API key for that publisher.
-6. Store the key in GitHub at:
-   `Settings -> Secrets and variables -> Actions -> REGISTRY_ACCESS_TOKEN`
-7. Merge the release candidate to `main`.
-8. Run **Publish to Comfy Registry** manually from GitHub Actions.
-9. Verify the Registry page and installation from ComfyUI Manager.
-10. Test **Install Missing Custom Nodes** with a clean ComfyUI installation and the included workflow.
+- Repository is public and licensed.
+- Comfy Registry publisher id is configured in `[tool.comfy].PublisherId`.
+- `REGISTRY_ACCESS_TOKEN` is stored in GitHub Actions secrets.
+
+## Release checklist
+
+1. Bump `project.version` in `pyproject.toml`.
+2. Update `CHANGELOG.md`, documentation, workflow metadata and `node_list.json` as needed.
+3. Merge the release candidate to `main`.
+4. Run **Publish to Comfy Registry** manually from GitHub Actions.
+5. Verify the new version on the Registry page and in ComfyUI Manager.
+6. Test **Install Missing Custom Nodes** with a clean ComfyUI installation and the included workflow.
 
 ## Missing-node discovery
 
