@@ -4,7 +4,7 @@
 
 Create compact looping GIFs from short videos directly in ComfyUI, with preset sizing, visual multi-text placement, optional blinking, a preview-first export flow, and bilingual on-canvas help.
 
-> **Status:** Development / pre-release. The current development workflow supports up to three independent text layers and is not yet published to the ComfyUI Registry.
+> **Status:** Version 0.4.0 is published to the ComfyUI Registry and can be installed through ComfyUI Manager.
 
 ![ComfyUI-GIFToolkit workflow overview](docs/images/workflow-overview.jpg)
 
